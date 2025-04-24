@@ -38,10 +38,31 @@ public:
         }
         else
         {
-            int gcd = find_gcd(num, denom);
+            int gcd = find_gcd(abs(num), denom);
             numerator = num / gcd;
             denominator = denom / gcd;
         }
+    }
+
+    bool operator == (Fraction &f)
+    {
+        if (sub(f).numerator == 0) return true;
+
+        else return false;
+    }
+
+    bool operator < (Fraction &f)
+    {
+        if (sub(f).numerator < 0) return true;
+
+        else return false;
+    }
+
+    bool operator > (Fraction &f)
+    {
+        if (sub(f).numerator > 0) return true;
+
+        else return false;
     }
 
     Fraction add(Fraction &f)
@@ -114,40 +135,166 @@ class FractionCollection
     int length;
 
 public:
-    FractionCollection();
+    FractionCollection()
+    {
+        fractions = new Fraction[10];
+        maxlength = 10;
+        length = 0;
+    }
 
-    FractionCollection(int size);
+    FractionCollection(int size)
+    {
+        fractions = new Fraction[size];
+        maxlength = size;
+        length = 0;
+    }
 
-    void insert(Fraction f);
+    void insert(Fraction f)
+    {
+        if (length > maxlength) cout << "No more space!" << endl;
 
-    void insert(int pos, Fraction f);
+        else
+        {
+            fractions[length] = f;
+            length++;
+        }
+    }
 
-    void remove();
+    void insert(int pos, Fraction f)
+    {
+        if (pos > maxlength || pos < 0) cout << "Invalid Index!" << endl;
 
-    void remove(Fraction f);
+        else if (pos > length)
+        {
+            fractions[pos] = f;
+            length = pos + 1;
+        }
+        else
+        {
+            for (int i = length; i > pos; i--) fractions[i] = fractions[i-1];
+            fractions[pos] = f;
+            length++;
+        }
+    }
 
-    void remove(int pos);
+    void remove()
+    {
+        if (length > 0) length--;
+        else cout << "Nothing to remove." << endl;
+    }
 
-    Fraction getmax();
+    void remove(Fraction f)
+    {
+        int found = 0;
+        for (int i = length-1; i >= 0; i--)
+        {
+            if (fractions[i] == f)
+            {
+                remove(i);
+                found++;
+            }
+        }
 
-    Fraction getmin();
+        if (found == 0) cout << "No instances found" << endl;
+    }
 
-    Fraction add(int start, int end);
+    void remove(int pos)
+    {
+        if (pos < 0) cout << "Invalid Index!" << endl;
 
-    Fraction mul(int start, int end);
+        else
+        {    
+            for (int i = pos; i < length; i++) fractions[i] = fractions[i+1];
+            length--;
+        }
+    }
 
-    Fraction sub(int pos1, int pos2);
+    Fraction getmax()
+    {
+        if (length == 0) return Fraction();
 
-    Fraction div(int pos1, int pos2);
+        else
+        {    
+            int idx = 0;
+            for (int i = 1; i < length; i++)
+            {
+                if (fractions[i] > fractions[idx]) idx = i;
+            }
+            return fractions[idx];
+        }
+    }
 
-    void print();
+    Fraction getmin()
+    {
+        if (length == 0) return Fraction();
 
-    ~FractionCollection();
+        else
+        {    
+            int idx = 0;
+            for (int i = 1; i < length; i++)
+            {
+                if (fractions[i] < fractions[idx]) idx = i;
+            }
+            return fractions[idx];
+        }
+    }
+
+    Fraction add(int start, int end)
+    {
+        Fraction tmp = fractions[start];
+        for (int i = end; i > start; i--) tmp = tmp.add(fractions[i]);
+        return tmp;
+    }
+
+    Fraction mul(int start, int end)
+    {
+        Fraction tmp = fractions[start];
+        for (int i = end; i > start; i--) tmp = tmp.mul(fractions[i]);
+        return tmp;
+    }
+
+    Fraction sub(int pos1, int pos2)
+    {
+        return fractions[pos1].sub(fractions[pos2]);
+    }
+
+    Fraction div(int pos1, int pos2)
+    {
+        return fractions[pos1].div(fractions[pos2]);
+    }
+
+    void print()
+    {
+        cout << endl << "Fractions" << endl;
+        cout << "-------------------------------" << endl;
+
+        for (int i = 0; i < length; i++)
+        {
+            cout << "Fraction " << i << ": ";
+            fractions[i].print();
+        }
+
+        cout << "Max: ";
+        getmax().print();
+        cout << "Min: ";
+        getmin().print();
+
+        cout << "Summation: ";
+        add(0, length-1).print();
+        cout << "Multiplication: ";
+        mul(0, length-1).print();
+    }
+
+    ~FractionCollection()
+    {
+        delete[] fractions;
+    }
 };
 
 
 int main()
-{ // create Fraction with numerator, denominator
+{
+    // create Fraction with numerator, denominator
     Fraction a(5, 2), b(7, 2), c(9, 2), d(28, 5);
     cout << "Fraction" << endl;
     cout << "-------------------------------" << endl;
@@ -179,7 +326,7 @@ int main()
     cout << "Div(a,0): ";
     a.div(0).print();
 
-/*
+///*
     // Collection of Fractions
     Fraction e, f(5), g(10);
     FractionCollection fc(10);
@@ -207,6 +354,7 @@ int main()
 
     fc.remove(); // removed the last fraction
     fc.print();  // notice the output
-*/
+//*/
+
     return 0; 
 }
