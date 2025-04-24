@@ -3,6 +3,7 @@
         "complex": "cpp",
         "numeric": "cpp",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "ratio": "cpp"
     }
 }

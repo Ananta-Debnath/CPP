@@ -38,10 +38,23 @@ public:
         }
         else
         {
-            int gcd = find_gcd(abs(num), denom);
-            numerator = num / gcd;
-            denominator = denom / gcd;
+            numerator = num;
+            denominator = denom;
         }
+        simplify();
+    }
+
+    void simplify()
+    {
+        if (denominator < 0)
+        {
+            numerator *= -1;
+            denominator *= -1;
+        }
+
+        int gcd = find_gcd(abs(numerator), denominator);
+        numerator = numerator / gcd;
+        denominator = denominator / gcd;
     }
 
     bool operator == (Fraction &f)
@@ -67,36 +80,36 @@ public:
 
     Fraction add(Fraction &f)
     {
-        int num = numerator*f.denominator + denominator*f.numerator;
-        int denom = denominator*f.denominator;
+        int num = (numerator * f.denominator) + (f.numerator * denominator);
+        int denom = denominator * f.denominator;
         return Fraction(num, denom);
     }
 
     Fraction add(int n)
     {
-        return Fraction(numerator + n*denominator, denominator);
+        return Fraction(numerator + (n * denominator), denominator);
     }
 
     Fraction sub(Fraction &f)
     {
-        int num = numerator*f.denominator - denominator*f.numerator;
-        int denom = denominator*f.denominator;
+        int num = (numerator * f.denominator) - (f.numerator * denominator);
+        int denom = denominator * f.denominator;
         return Fraction(num, denom);
     }
 
     Fraction sub(int n)
     {
-        return Fraction(numerator - n*denominator, denominator);
+        return Fraction(numerator - (n * denominator), denominator);
     }
 
     Fraction mul(Fraction &f)
     {
-        return Fraction(numerator*f.numerator, denominator*f.denominator);
+        return Fraction(numerator * f.numerator, denominator * f.denominator);
     }
 
     Fraction mul(int n)
     {
-        return Fraction(n*numerator, denominator);
+        return Fraction(n * numerator, denominator);
     }
 
     Fraction div(Fraction &f)
@@ -106,7 +119,7 @@ public:
             cout << "Can not divide by 0" << endl;
             return *this;
         }
-        else return Fraction(numerator*f.denominator, denominator*f.numerator);
+        else return Fraction(numerator * f.denominator, denominator * f.numerator);
     }
 
     Fraction div(int n)
@@ -116,7 +129,7 @@ public:
             cout << "Can not divide by 0" << endl;
             return *this;
         }
-        else return Fraction(numerator, n*denominator);
+        else return Fraction(numerator, n * denominator);
     }
 
     void print()
@@ -151,7 +164,7 @@ public:
 
     void insert(Fraction f)
     {
-        if (length > maxlength) cout << "No more space!" << endl;
+        if (length >= maxlength) cout << "No more space!" << endl;
 
         else
         {
@@ -162,9 +175,9 @@ public:
 
     void insert(int pos, Fraction f)
     {
-        if (pos > maxlength || pos < 0) cout << "Invalid Index!" << endl;
+        if (pos >= maxlength || pos < 0) cout << "Invalid Index!" << endl;
 
-        else if (pos > length)
+        else if (pos >= length)
         {
             fractions[pos] = f;
             length = pos + 1;
@@ -200,7 +213,7 @@ public:
 
     void remove(int pos)
     {
-        if (pos < 0) cout << "Invalid Index!" << endl;
+        if (pos < 0 || pos >= length) cout << "Invalid Index!" << endl;
 
         else
         {    
@@ -241,26 +254,52 @@ public:
 
     Fraction add(int start, int end)
     {
-        Fraction tmp = fractions[start];
-        for (int i = end; i > start; i--) tmp = tmp.add(fractions[i]);
-        return tmp;
+        if (start < 0 || end >= length)
+        {
+            cout << "Invalid Index!" << endl;
+            return Fraction();
+        }
+        else
+        {
+            Fraction tmp = fractions[start];
+            for (int i = end; i > start; i--) tmp = tmp.add(fractions[i]);
+            return tmp;
+        }
     }
 
     Fraction mul(int start, int end)
     {
-        Fraction tmp = fractions[start];
-        for (int i = end; i > start; i--) tmp = tmp.mul(fractions[i]);
-        return tmp;
+        if (start < 0 || end >= length)
+        {
+            cout << "Invalid Index!" << endl;
+            return Fraction();
+        }
+        else
+        {
+            Fraction tmp = fractions[start];
+            for (int i = end; i > start; i--) tmp = tmp.mul(fractions[i]);
+            return tmp;
+        }
     }
 
     Fraction sub(int pos1, int pos2)
     {
-        return fractions[pos1].sub(fractions[pos2]);
+        if (pos1 < 0 || pos1 >= length || pos2 < 0 || pos2 >= length)
+        {
+            cout << "Invalid Index!" << endl;
+            return Fraction();
+        }
+        else return fractions[pos1].sub(fractions[pos2]);
     }
 
     Fraction div(int pos1, int pos2)
     {
-        return fractions[pos1].div(fractions[pos2]);
+        if (pos1 < 0 || pos1 >= length || pos2 < 0 || pos2 >= length)
+        {
+            cout << "Invalid Index!" << endl;
+            return Fraction();
+        }
+        else return fractions[pos1].div(fractions[pos2]);
     }
 
     void print()
@@ -291,7 +330,7 @@ public:
     }
 };
 
-
+/*
 int main()
 {
     // create Fraction with numerator, denominator
@@ -326,7 +365,7 @@ int main()
     cout << "Div(a,0): ";
     a.div(0).print();
 
-///*
+
     // Collection of Fractions
     Fraction e, f(5), g(10);
     FractionCollection fc(10);
@@ -354,7 +393,97 @@ int main()
 
     fc.remove(); // removed the last fraction
     fc.print();  // notice the output
-//*/
+
 
     return 0; 
+}
+*/
+
+
+// Test Cases by GitHub Copilot
+int main()
+{
+    // Test 1: Fraction creation and simplification
+    cout << "Test 1: Fraction Creation and Simplification" << endl;
+    Fraction f1(4, 8); // Should simplify to 1/2
+    Fraction f2(-6, -9); // Should simplify to 2/3
+    Fraction f3(0, 5); // Should remain 0/1
+    Fraction f4(5, 0); // Should handle denominator = 0
+    f1.print();
+    f2.print();
+    f3.print();
+    f4.print();
+    cout << endl;
+
+    // Test 2: Arithmetic operations
+    cout << "Test 2: Arithmetic Operations" << endl;
+    Fraction f5(3, 4), f6(2, 5);
+    (f5.add(f6)).print(); // Addition
+    (f5.sub(f6)).print(); // Subtraction
+    (f5.mul(f6)).print(); // Multiplication
+    (f5.div(f6)).print(); // Division
+    // (f5.div(Fraction(0, 1))).print(); // Division by zero
+    cout << endl;
+
+    // Test 3: Comparison operators
+    cout << "Test 3: Comparison Operators" << endl;
+    cout << (f5 == f6) << endl; // Should print 0 (false)
+    cout << (f5 < f6) << endl;  // Should print 0 (false)
+    cout << (f5 > f6) << endl;  // Should print 1 (true)
+    cout << endl;
+
+    // Test 4: FractionCollection basic operations
+    cout << "Test 4: FractionCollection Basic Operations" << endl;
+    FractionCollection fc(5);
+    fc.insert(f1);
+    fc.insert(f2);
+    fc.insert(f3);
+    fc.insert(f4);
+    fc.print();
+    cout << endl;
+
+    // Test 5: Insert at specific position
+    cout << "Test 5: Insert at Specific Position" << endl;
+    fc.insert(2, f5); // Insert at position 2
+    fc.print();
+    cout << endl;
+
+    // Test 6: Remove by position and value
+    cout << "Test 6: Remove by Position and Value" << endl;
+    fc.remove(1); // Remove at position 1
+    fc.print();
+    fc.remove(f5); // Remove all instances of f5
+    fc.print();
+    cout << endl;
+
+    // Test 7: Get max and min fractions
+    cout << "Test 7: Get Max and Min Fractions" << endl;
+    fc.getmax().print(); // Should print the largest fraction
+    fc.getmin().print(); // Should print the smallest fraction
+    cout << endl;
+
+    // Test 8: Add and multiply fractions in a range
+    cout << "Test 8: Add and Multiply Fractions in a Range" << endl;
+    fc.add(0, 2).print(); // Add fractions from index 0 to 2
+    fc.mul(0, 2).print(); // Multiply fractions from index 0 to 2
+    cout << endl;
+
+    // Test 9: Invalid operations
+    cout << "Test 9: Invalid Operations" << endl;
+    fc.insert(10, f6); // Invalid index
+    fc.remove(10);     // Invalid index
+    fc.add(-1, 5).print(); // Invalid range
+    fc.mul(0, 10).print(); // Invalid range
+    cout << endl;
+
+    // Test 10: Dynamic resizing (if implemented)
+    cout << "Test 10: Dynamic Resizing" << endl;
+    FractionCollection fc2(2);
+    fc2.insert(f1);
+    fc2.insert(f2);
+    fc2.insert(f3); // Should trigger resizing if implemented
+    fc2.print();
+    cout << endl;
+
+    return 0;
 }
