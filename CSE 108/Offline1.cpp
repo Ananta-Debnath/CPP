@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 
@@ -7,32 +8,102 @@ class Fraction
     int numerator;
     int denominator;
 
+    int find_gcd(int a, int b)
+    {
+        if (b == 0) return a;
+        return find_gcd(b, a % b);
+    }
+
 public:
-    Fraction();
+    Fraction()
+    {
+        numerator = 0;
+        denominator = 1;
+    }
 
-    Fraction(int denom);
+    Fraction(int num)
+    {
+        numerator = num;
+        denominator = 1;
+    }
 
-    Fraction(int num, int denom);
+    Fraction(int num, int denom)
+    {
+        if (denom == 0)
+        {
+            numerator = num;
+            denominator = 1;
+            cout << "Denominator cannot be 0" << endl;
+            cout << "Denominator replaced by 1" << endl;
+        }
+        else
+        {
+            int gcd = find_gcd(num, denom);
+            numerator = num / gcd;
+            denominator = denom / gcd;
+        }
+    }
 
-    Fraction add(int n);
+    Fraction add(Fraction &f)
+    {
+        int num = numerator*f.denominator + denominator*f.numerator;
+        int denom = denominator*f.denominator;
+        return Fraction(num, denom);
+    }
 
-    Fraction add(Fraction &f);
+    Fraction add(int n)
+    {
+        return Fraction(numerator + n*denominator, denominator);
+    }
 
-    Fraction sub(int n);
+    Fraction sub(Fraction &f)
+    {
+        int num = numerator*f.denominator - denominator*f.numerator;
+        int denom = denominator*f.denominator;
+        return Fraction(num, denom);
+    }
 
-    Fraction sub(Fraction &f);
+    Fraction sub(int n)
+    {
+        return Fraction(numerator - n*denominator, denominator);
+    }
 
-    Fraction mul(int n);
+    Fraction mul(Fraction &f)
+    {
+        return Fraction(numerator*f.numerator, denominator*f.denominator);
+    }
 
-    Fraction mul(Fraction &f);
+    Fraction mul(int n)
+    {
+        return Fraction(n*numerator, denominator);
+    }
 
-    Fraction div(int n);
+    Fraction div(Fraction &f)
+    {
+        if (f.numerator == 0)
+        {
+            cout << "Can not divide by 0" << endl;
+            return *this;
+        }
+        else return Fraction(numerator*f.denominator, denominator*f.numerator);
+    }
 
-    Fraction div(Fraction &f);
+    Fraction div(int n)
+    {
+        if (n == 0)
+        {
+            cout << "Can not divide by 0" << endl;
+            return *this;
+        }
+        else return Fraction(numerator, n*denominator);
+    }
 
-    void print();
+    void print()
+    {
+        cout << numerator << '/' << denominator << endl;
+    }
 
-    ~Fraction();
+    // ~Fraction();
 };
 
 
@@ -108,7 +179,7 @@ int main()
     cout << "Div(a,0): ";
     a.div(0).print();
 
-
+/*
     // Collection of Fractions
     Fraction e, f(5), g(10);
     FractionCollection fc(10);
@@ -136,6 +207,6 @@ int main()
 
     fc.remove(); // removed the last fraction
     fc.print();  // notice the output
-
+*/
     return 0; 
 }
