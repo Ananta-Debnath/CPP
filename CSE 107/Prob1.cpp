@@ -36,7 +36,7 @@ int main()
     ob2 = ob1;
     ob2->show();
 
-    ob1->~ObAssign();
+    delete ob1;
 
     return 0;
 }
