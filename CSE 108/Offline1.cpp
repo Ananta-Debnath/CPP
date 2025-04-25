@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cmath>
 using namespace std;
 
 
@@ -57,27 +56,26 @@ public:
         denominator = denominator / gcd;
     }
 
+    int compare(Fraction &f)
+    {
+        return sub(f).numerator;
+    }
+/*
     bool operator == (Fraction &f)
     {
-        if (sub(f).numerator == 0) return true;
-
-        else return false;
+        return compare(f) == 0;
     }
 
     bool operator < (Fraction &f)
     {
-        if (sub(f).numerator < 0) return true;
-
-        else return false;
+        return compare(f) < 0;
     }
 
     bool operator > (Fraction &f)
     {
-        if (sub(f).numerator > 0) return true;
-
-        else return false;
+        return compare(f) > 0;
     }
-
+*/
     Fraction add(Fraction &f)
     {
         int num = (numerator * f.denominator) + (f.numerator * denominator);
@@ -201,7 +199,7 @@ public:
         int found = 0;
         for (int i = length-1; i >= 0; i--)
         {
-            if (fractions[i] == f)
+            if (fractions[i].compare(f) == 0)
             {
                 remove(i);
                 found++;
@@ -231,7 +229,7 @@ public:
             int idx = 0;
             for (int i = 1; i < length; i++)
             {
-                if (fractions[i] > fractions[idx]) idx = i;
+                if (fractions[i].compare(fractions[idx]) > 0) idx = i;
             }
             return fractions[idx];
         }
@@ -246,7 +244,7 @@ public:
             int idx = 0;
             for (int i = 1; i < length; i++)
             {
-                if (fractions[i] < fractions[idx]) idx = i;
+                if (fractions[i].compare(fractions[idx]) < 0) idx = i;
             }
             return fractions[idx];
         }
@@ -427,9 +425,14 @@ int main()
 
     // Test 3: Comparison operators
     cout << "Test 3: Comparison Operators" << endl;
+    cout << (f5.compare(f6) == 0) << endl; // Should print 0 (false)
+    cout << (f5.compare(f6) < 0) << endl;  // Should print 0 (false)
+    cout << (f5.compare(f6) > 0) << endl;  // Should print 1 (true)
+/*
     cout << (f5 == f6) << endl; // Should print 0 (false)
     cout << (f5 < f6) << endl;  // Should print 0 (false)
     cout << (f5 > f6) << endl;  // Should print 1 (true)
+*/
     cout << endl;
 
     // Test 4: FractionCollection basic operations
