@@ -3,31 +3,38 @@ using namespace std;
 
 class Solution {
     public:
-        int countCompleteSubarrays(vector<int>& nums) {
-            unordered_map<int, int> freq_map;
-            for (int num : nums) freq_map[num]++;
-
-            int l = nums.size(), start, end;
+        long long countInterestingSubarrays(vector<int>& nums, int modulo, int k) {
+            vector<int> idx;
+            idx.push_back(0);
+            int l = nums.size();
             for (int i = 0; i < l; i++)
             {
-                if (freq_map[nums[i]] == 1)
-                {
-                    start = i;
-                    break;
-                }
-                freq_map[nums[i]]--;
+                if (nums[i] % modulo == k) idx.push_back(i);
             }
+            idx.push_back(l-1);
 
-            for (int i = l-1; i > start; i--)
+            int l2 = idx.size();
+            long long count = 0;
+            long long d = 0;
+
+            if (k == 0)
             {
-                if (freq_map[nums[i]] == 1)
+                for (int i = 1; i < l2; i++)
                 {
-                    end = l - i - 1;
-                    break;
+                    d = idx[i] - idx[i-1];
+                    while (d--) count += d;
                 }
-                freq_map[nums[i]]--;
+                d = modulo;
             }
 
-            
+            for (int i = 1; i + k < l2; i++)
+            {
+                for (int j = d; i+j+k < l2; j += modulo)
+                {
+                    count += ((long long)(idx[i] - idx[i-1] + 1)) * ((long long)(idx[i+j+k] - idx[i+j+k-1] + 1));
+                }
+            }
+
+            return count;
         }
     };

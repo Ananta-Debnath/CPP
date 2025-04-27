@@ -85,11 +85,13 @@ public:
 
     Fraction add(int n)
     {
-        return Fraction(numerator + (n * denominator), denominator);
+        Fraction f(n);
+        return add(f);
     }
 
     Fraction sub(Fraction &f)
     {
+        // Can be implemented by Add
         int num = (numerator * f.denominator) - (f.numerator * denominator);
         int denom = denominator * f.denominator;
         return Fraction(num, denom);
@@ -97,7 +99,8 @@ public:
 
     Fraction sub(int n)
     {
-        return Fraction(numerator - (n * denominator), denominator);
+        Fraction f(n);
+        return sub(f);
     }
 
     Fraction mul(Fraction &f)
@@ -107,7 +110,8 @@ public:
 
     Fraction mul(int n)
     {
-        return Fraction(n * numerator, denominator);
+        Fraction f(n);
+        return mul(f);
     }
 
     Fraction div(Fraction &f)
@@ -122,12 +126,8 @@ public:
 
     Fraction div(int n)
     {
-        if (n == 0)
-        {
-            cout << "Can not divide by 0" << endl;
-            return *this;
-        }
-        else return Fraction(numerator, n * denominator);
+        Fraction f(n);
+        return div(f);
     }
 
     void print()
@@ -173,7 +173,7 @@ public:
 
     void insert(int pos, Fraction f)
     {
-        if (pos >= maxlength || pos < 0) cout << "Invalid Index!" << endl;
+        if (pos >= maxlength || pos < 0) cout << "Invalid index!" << endl;
 
         else if (pos >= length)
         {
@@ -211,7 +211,7 @@ public:
 
     void remove(int pos)
     {
-        if (pos < 0 || pos >= length) cout << "Invalid Index!" << endl;
+        if (pos < 0 || pos >= length) cout << "Invalid index!" << endl;
 
         else
         {    
@@ -252,31 +252,31 @@ public:
 
     Fraction add(int start, int end)
     {
-        if (start < 0 || end >= length)
+        if (start < 0 || start >= length || end < 0 || end >= length || start > end)
         {
-            cout << "Invalid Index!" << endl;
+            cout << "Invalid range!" << endl;
             return Fraction();
         }
         else
         {
-            Fraction tmp = fractions[start];
-            for (int i = end; i > start; i--) tmp = tmp.add(fractions[i]);
-            return tmp;
+            Fraction sum = fractions[start];
+            for (int i = end; i > start; i--) sum = sum.add(fractions[i]);
+            return sum;
         }
     }
 
     Fraction mul(int start, int end)
     {
-        if (start < 0 || end >= length)
+        if (start < 0 || start >= length || end < 0 || end >= length || start > end)
         {
-            cout << "Invalid Index!" << endl;
+            cout << "Invalid range!" << endl;
             return Fraction();
         }
         else
         {
-            Fraction tmp = fractions[start];
-            for (int i = end; i > start; i--) tmp = tmp.mul(fractions[i]);
-            return tmp;
+            Fraction product = fractions[start];
+            for (int i = end; i > start; i--) product = product.mul(fractions[i]);
+            return product;
         }
     }
 
@@ -284,7 +284,7 @@ public:
     {
         if (pos1 < 0 || pos1 >= length || pos2 < 0 || pos2 >= length)
         {
-            cout << "Invalid Index!" << endl;
+            cout << "Invalid index!" << endl;
             return Fraction();
         }
         else return fractions[pos1].sub(fractions[pos2]);
@@ -294,7 +294,7 @@ public:
     {
         if (pos1 < 0 || pos1 >= length || pos2 < 0 || pos2 >= length)
         {
-            cout << "Invalid Index!" << endl;
+            cout << "Invalid index!" << endl;
             return Fraction();
         }
         else return fractions[pos1].div(fractions[pos2]);
@@ -328,7 +328,7 @@ public:
     }
 };
 
-/*
+
 int main()
 {
     // create Fraction with numerator, denominator
@@ -395,9 +395,9 @@ int main()
 
     return 0; 
 }
-*/
 
 
+/*
 // Test Cases by GitHub Copilot
 int main()
 {
@@ -432,7 +432,7 @@ int main()
     cout << (f5 == f6) << endl; // Should print 0 (false)
     cout << (f5 < f6) << endl;  // Should print 0 (false)
     cout << (f5 > f6) << endl;  // Should print 1 (true)
-*/
+*
     cout << endl;
 
     // Test 4: FractionCollection basic operations
@@ -490,3 +490,4 @@ int main()
 
     return 0;
 }
+*/
