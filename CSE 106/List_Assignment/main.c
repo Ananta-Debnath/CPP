@@ -14,7 +14,7 @@ int main()
     init(&list);
 
     int func, param, param2;
-     while(fscanf(file, "%d", &func) == 1 && func != 0)
+    while(fscanf(file, "%d", &func) == 1 && func != 0)
     {
         if(func == 1 && fscanf(file, "%d", &param) == 1){
             printf("Insert %d\n", param);

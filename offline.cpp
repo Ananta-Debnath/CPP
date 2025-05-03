@@ -124,12 +124,7 @@ class Fraction{
 
 
     void print(){
-
-        if(denominator==1){
-            cout<<numerator<<endl;
-        }else{
-            cout<<numerator<<"/"<<denominator<<endl;
-        }
+        cout<<numerator<<"/"<<denominator<<endl;
     }
 
     int getNumerator(){
@@ -316,8 +311,8 @@ public:
 
     void print(){
 
-        cout<<"fractions"<<endl;
-        cout<<"--------------"<<endl;
+        cout << endl << "Fractions" << endl;
+        cout << "-------------------------------" << endl;
 
         for(int i=0;i<length;i++){
             cout<<"Fraction "<<i<<": ";
@@ -347,96 +342,70 @@ public:
 
 
 
-
 int main()
 {
-    // Test 1: Fraction creation and simplification
-    cout << "Test 1: Fraction Creation and Simplification" << endl;
-    Fraction f1(4, 8); // Should simplify to 1/2
-    Fraction f2(-6, -9); // Should simplify to 2/3
-    Fraction f3(0, 5); // Should remain 0/1
-    Fraction f4(5, 5); // Should handle denominator = 0
-    f1.print();
-    f2.print();
-    f3.print();
-    f4.print();
+    // create Fraction with numerator, denominator
+    Fraction a(5, 2), b(7, 2), c(9, 2), d(28, 5);
+    cout << "Fraction" << endl;
+    cout << "-------------------------------" << endl;
+    cout << "A: ";
+    a.print();
+    cout << "B: ";
+    b.print();
     cout << endl;
 
-    // Test 2: Arithmetic operations
-    cout << "Test 2: Arithmetic Operations" << endl;
-    Fraction f5(3, 4), f6(2, 5);
-    (f5.add(f6)).print(); // Addition
-    (f5.sub(f6)).print(); // Subtraction
-    (f5.mul(f6)).print(); // Multiplication
-    (f5.div(f6)).print(); // Division
-    // (f5.div(Fraction(0, 1))).print(); // Division by zero
-    cout << endl;
+    cout << "Add(a,b): ";
+    a.add(b).print();
+    cout << "Add(a,2): ";
+    a.add(2).print();
 
-    // Test 3: Comparison operators
-    cout << "Test 3: Comparison Operators" << endl;
-/*
-    cout << (f5.compare(f6) == 0) << endl; // Should print 0 (false)
-    cout << (f5.compare(f6) < 0) << endl;  // Should print 0 (false)
-    cout << (f5.compare(f6) > 0) << endl;  // Should print 1 (true)
-*/
-    cout << (f5 == f6) << endl; // Should print 0 (false)
-    cout << (f5 < f6) << endl;  // Should print 0 (false)
-    cout << (f5 > f6) << endl;  // Should print 1 (true)
+    cout << "Sub(a,b) ";
+    a.sub(b).print();
+    cout << "Sub(a,2) ";
+    a.sub(2).print();
 
-    cout << endl;
+    cout << "Mul(a,b): ";
+    a.mul(b).print();
+    cout << "Mul(a,2): ";
+    a.mul(2).print();
 
-    // Test 4: FractionCollection basic operations
-    cout << "Test 4: FractionCollection Basic Operations" << endl;
-    FractionCollection fc(5);
-    fc.insert(f1);
-    fc.insert(f2);
-    fc.insert(f3);
-    fc.insert(f4);
+    cout << "Div(a,b): ";
+    a.div(b).print();
+    cout << "Div(a,2): ";
+    a.div(2).print();
+    cout << "Div(a,0): ";
+    a.div(0).print();
+
+
+    // Collection of Fractions
+    Fraction e, f(5), g(10);
+    FractionCollection fc(10);
+    fc.insert(a);
+    fc.insert(b);
+    fc.insert(c);
     fc.print();
-    cout << endl;
 
-    // Test 5: Insert at specific position
-    cout << "Test 5: Insert at Specific Position" << endl;
-    fc.insert(2, f5); // Insert at position 2
+    cout << "Sub(Pos0, Pos1): ";
+    fc.sub(0, 1).print(); // subtracts the fraction at pos1 from fraction at pos0
+    cout << "Div(Pos0, Pos1): ";
+    fc.div(0, 1).print(); // divides the fraction at pos0 by the fraction at pos1
+
+    fc.remove(1);         // removed 'b'
     fc.print();
-    cout << endl;
 
-    // Test 6: Remove by position and value
-    cout << "Test 6: Remove by Position and Value" << endl;
-    fc.remove(1); // Remove at position 1
+    fc.remove(a);
     fc.print();
-    fc.remove(f5); // Remove all instances of f5
+
+    fc.insert(d);
+    fc.insert(0, e); // insert at pos0
+    fc.insert(f);
+    fc.insert(g);
     fc.print();
-    cout << endl;
 
-    // Test 7: Get max and min fractions
-    cout << "Test 7: Get Max and Min Fractions" << endl;
-    fc.getmax().print(); // Should print the largest fraction
-    fc.getmin().print(); // Should print the smallest fraction
-    cout << endl;
+    fc.remove(); // removed the last fraction
+    fc.print();  // notice the output
 
-    // Test 8: Add and multiply fractions in a range
-    cout << "Test 8: Add and Multiply Fractions in a Range" << endl;
-    fc.add(0, 2).print(); // Add fractions from index 0 to 2
-    fc.mul(0, 2).print(); // Multiply fractions from index 0 to 2
-    cout << endl;
 
-    // Test 9: Invalid operations
-    cout << "Test 9: Invalid Operations" << endl;
-    fc.insert(10, f6); // Invalid index
-    fc.remove(10);     // Invalid index
-    fc.add(-1, 5).print(); // Invalid range
-    fc.mul(0, 10).print(); // Invalid range
-    cout << endl;
-
-    // Test 10: Dynamic resizing (if implemented)
-    cout << "Test 10: Dynamic Resizing" << endl;
-    FractionCollection fc2(2);
-    fc2.insert(f1);
-    fc2.insert(f2);
-    fc2.insert(f3); // Should trigger resizing if implemented
-    fc2.print();
-    cout << endl;
-
-    return 0;
+    return 0; 
 }
+

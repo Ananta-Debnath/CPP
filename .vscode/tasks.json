@@ -29,7 +29,7 @@
             "command": "g++",
             "args": [
                 "-g",
-                "${fileDirname}/${fileBasenameNoExtension}.cpp", // adjust this to your source file(s)
+                "${fileDirname}/${fileBasenameNoExtension}${fileExtname}", // adjust this to your source file(s)
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}.exe" // output binary
             ],
