@@ -21,7 +21,7 @@ void init(arrayList* list)
 {
     // implement initialization
     list->array = (int*)malloc(2 * sizeof(int));
-    list->cur = -1;
+    list->cur = 0;
     list->size = 2;
     list->length = 0;
 }
@@ -35,7 +35,7 @@ void free_list(arrayList* list)
         list->array = NULL;
     }
     
-    list->cur = -1;
+    list->cur = 0;
     list->size = 2;
     list->length = 0;
 }
@@ -65,8 +65,6 @@ void increase_capacity(arrayList* list)
 void decrease_capacity(arrayList* list)
 {
     // implement capacity decrease
-    if (list->size <= 2) return;
-
     int* newArray = (int*)malloc(sizeof(int) * list->size / 2);
     if (newArray == NULL)
     {
@@ -97,21 +95,29 @@ void print(arrayList* list)
         for (int i = 0; i <= list->cur; i++) printf("%d ", list->array[i]);
         printf("\b| ");
         for(int i = list->cur + 1; i < list->length; i++) printf("%d ", list->array[i]);
-        printf("\b]\n");
+        printf("]\n");
     }
 }
 
 void insert(int item, arrayList* list)
 {
     // implement insert function
-    for (int i = list->length; i > list->cur; i--)
-    {
-        list->array[i+1] = list->array[i];
-    }
     list->length++;
-    list->cur++;
-    list->array[list->cur] = item;
     resize(list);
+    if (list->length == 1)
+    {
+        list->array[0] = item;
+    }
+    else
+    {
+        for (int i = list->length - 1; i > list->cur; i--)
+        {
+            list->array[i+1] = list->array[i];
+        }
+        list->cur++;
+        list->array[list->cur] = item;
+    }
+
     print(list);
 }
 
@@ -134,9 +140,9 @@ int delete_cur(arrayList* list)
 void append(int item, arrayList* list)
 {
     // implement append function
-    list->array[list->length] = item;
     list->length++;
     resize(list);
+    list->array[list->length-1] = item;
     print(list);
 }
 
@@ -216,7 +222,7 @@ void resize(arrayList* list)
 {
     if (list->length * 2 > list->size) increase_capacity(list);
 
-    else if (list->length * 4 < list->size) decrease_capacity(list);
+    else if (list->length * 4 < list->size && list->size > 2) decrease_capacity(list);
 }
 
 void delete_idx(int idx, arrayList* list)
