@@ -8,19 +8,42 @@ class Course
     float creditHour;
 
 public:
-    Course();
+    Course()
+    {
+        name = "No Name";
+        creditHour = 0;
+    }
 
-    Course(string name, float creditHour);
+    Course(string name, float creditHour)
+    {
+        this->name = name;
+        this->creditHour = creditHour;
+    }
 
-    string getName();
+    string getName()
+    {
+        return name;
+    }
     
-    float getCreditHour();
-    
-    void setName(string name);
-    
-    void  setCreditHour(float  creditHour);
-    
-    void display();
+    float getCreditHour()
+    {
+        return creditHour;
+    }
+
+    void setName(string name)
+    {
+        this->name = name;
+    }
+
+    void  setCreditHour(float  creditHour)
+    {
+        this->creditHour = creditHour;
+    }
+
+    void display()
+    {
+        cout << "Course Name: " << name << ", Credit Hour: " << creditHour;
+    }
 };
 
 
@@ -78,7 +101,7 @@ public:
 
 // Global Variables
 Student* students[];
-int totalStudents = 0;
+int totalStudents;
 
 
 Student getTopper();
