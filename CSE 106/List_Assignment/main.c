@@ -1,6 +1,6 @@
 #include <stdio.h>
-// #include "arrayList.h"
-#include "linkedList.h"
+#include "arrayList.h"
+// #include "linkedList.h"
 
 int main()
 {
@@ -9,8 +9,8 @@ int main()
         return 1;
     }
 
-    // arrayList list;
-    linkedList list;
+    arrayList list;
+    // linkedList list;
     init(&list);
 
     int func, param, param2;

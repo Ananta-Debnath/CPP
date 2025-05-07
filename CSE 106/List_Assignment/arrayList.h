@@ -14,6 +14,7 @@ typedef struct
 
 // Prototypes
 void resize(arrayList* list);
+void insert_idx(int idx, int value, arrayList* list);
 void delete_idx(int idx, arrayList* list);
 
 
@@ -21,7 +22,7 @@ void init(arrayList* list)
 {
     // implement initialization
     list->array = (int*)malloc(2 * sizeof(int));
-    list->cur = 0;
+    list->cur = -1;
     list->size = 2;
     list->length = 0;
 }
@@ -35,7 +36,7 @@ void free_list(arrayList* list)
         list->array = NULL;
     }
     
-    list->cur = 0;
+    list->cur = -1;
     list->size = 2;
     list->length = 0;
 }
@@ -102,22 +103,8 @@ void print(arrayList* list)
 void insert(int item, arrayList* list)
 {
     // implement insert function
-    list->length++;
-    resize(list);
-    if (list->length == 1)
-    {
-        list->array[0] = item;
-    }
-    else
-    {
-        for (int i = list->length - 1; i > list->cur; i--)
-        {
-            list->array[i+1] = list->array[i];
-        }
-        list->cur++;
-        list->array[list->cur] = item;
-    }
-
+    list->cur++;
+    insert_idx(list->cur, item, list);
     print(list);
 }
 
@@ -128,7 +115,7 @@ int delete_cur(arrayList* list)
     {
         int value = list->array[list->cur];
         delete_idx(list->cur, list);
-        if (list->cur == list->length && list->cur != 0) list->cur--;
+        if (list->cur == list->length) list->cur--;
         resize(list);
         print(list);
         return value;
@@ -140,9 +127,8 @@ int delete_cur(arrayList* list)
 void append(int item, arrayList* list)
 {
     // implement append function
-    list->length++;
-    resize(list);
-    list->array[list->length-1] = item;
+    insert_idx(list->length, item, list);
+    if (list->cur == -1) list->cur = 0;
     print(list);
 }
 
@@ -195,8 +181,9 @@ void delete_item(int item, arrayList* list)
         {
             if (i < list->cur) list->cur--;
             delete_idx(i, list);
+            if (list->cur >= list->length) list->cur = list->length-1;
             print(list);
-            return;
+            break;
         }
     }
 
@@ -223,6 +210,14 @@ void resize(arrayList* list)
     if (list->length * 2 > list->size) increase_capacity(list);
 
     else if (list->length * 4 < list->size && list->size > 2) decrease_capacity(list);
+}
+
+void insert_idx(int idx, int value, arrayList* list)
+{
+    list->length++;
+    resize(list);
+    for (int i = list->length; i > idx; i--) list->array[i] = list->array[i-1];
+    list->array[idx] = value;
 }
 
 void delete_idx(int idx, arrayList* list)
