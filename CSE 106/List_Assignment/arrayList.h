@@ -181,9 +181,10 @@ void delete_item(int item, arrayList* list)
         {
             if (i < list->cur) list->cur--;
             delete_idx(i, list);
+            resize(list);
             if (list->cur >= list->length) list->cur = list->length-1;
             print(list);
-            break;
+            return;
         }
     }
 

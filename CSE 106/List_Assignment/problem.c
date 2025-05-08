@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "arrayList.h"
-// #include "linkedList.h"
+// #include "arrayList.h"
+#include "linkedList.h"
 
 int main()
 {
@@ -9,25 +9,67 @@ int main()
         return 1;
     }
 
-    arrayList dal, fl;
-    // linkedList dal, fl;
+    // arrayList dal, fl;
+    linkedList dal, fl;
     
     // initialize the lists
+    init(&dal);
+    init(&fl);
 
     int func, param;
     while(fscanf(file, "%d", &func) == 1 && func != 0)
     {
         if(func == 1 && fscanf(file, "%d", &param) == 1){
             printf("Recruit %d\n", param);
+
             // implement logic here
+            if (is_present(param, &dal))
+            {
+                printf("Already in Dumbledore's Army\n");
+            }
+            else if (is_present(param, &fl))
+            {
+                printf("In the Foe list, cannot recruit\n");
+            }
+            else
+            {
+                printf("DA list: \n");
+                append(param, &dal);
+            }
         }
         else if(func == 2 && fscanf(file, "%d", &param) == 1){
             printf("Fire %d\n", param);
+
             // implement logic here
+            if (is_present(param, &dal))
+            {
+                printf("DA list: \n");
+                delete_item(param, &dal);
+
+                printf("Foe list: \n");
+                append(param, &fl);
+            }
+            else
+            {
+                printf("Not in Dumbledore's Army\n");
+            }
         }
         else if(func == 3 && fscanf(file, "%d", &param) == 1){
             printf("Check %d\n", param);
+
             //implement logic here
+            if (is_present(param, &dal))
+            {
+                printf("Friend\n");
+            }
+            else if (is_present(param, &fl))
+            {
+                printf("Foe\n");
+            }
+            else
+            {
+                printf("Unknown\n");
+            }
         }
         else{
             break;
@@ -36,6 +78,8 @@ int main()
     }
    
     // free memory
+    free_list(&dal);
+    free_list(&fl);
     
     return 0;
 }
