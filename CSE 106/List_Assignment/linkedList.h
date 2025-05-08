@@ -36,7 +36,7 @@ void free_list(linkedList* list)
 {
     // implement destruction of list
     node* toFree;
-    if (list->head != NULL)
+    while (list->head != NULL)
     {
         toFree = list->head;
         list->head = list->head->next;
@@ -120,8 +120,12 @@ int size(linkedList* list)
 void prev(int n, linkedList* list)
 {
     // implement prev function
-    for (int i = 0; i < n && list->cur->prev->prev != NULL; i++) list->cur = list->cur->prev;
-
+    if (list->cur->prev != NULL)
+    {
+        for (int i = 0; i < n && list->cur->prev->prev != NULL; i++)
+            list->cur = list->cur->prev;
+    }
+    
     print(list);
 }
 
@@ -183,14 +187,18 @@ void swap_ind(int ind1, int ind2, linkedList* list)
 node* createNode(int value)
 {
     node* newNode = (node*) malloc(sizeof(node));
-    if (newNode == NULL) printf("Memory allocation fault!\n");
+    if (newNode == NULL)
+    {
+        printf("Memory allocation fault!\n");
+        return NULL;
+    }
 
     else
     {
         newNode->element = value;
         newNode->next = newNode->prev = NULL;
+        return newNode;
     }
-    return newNode;
 }
 
 node* findItem(int n, linkedList* list)

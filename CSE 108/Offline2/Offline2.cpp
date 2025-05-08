@@ -35,7 +35,7 @@ public:
         this->name = name;
     }
 
-    void  setCreditHour(float  creditHour)
+    void  setCreditHour(float creditHour)
     {
         this->creditHour = creditHour;
     }
@@ -57,56 +57,252 @@ class Student
     float* gradePoints;
 
 public:
-    Student();
+    Student()
+    {
+        name = "N/A";
+        id = 0;
+        courses = NULL;
+        totalCourses = 0;
+        maxCourses = 0;
+        gradePoints = NULL;
+    }
 
-    Student(string  name,  int  id,  int  maxCourses);
+    Student(string name, int id, int maxCourses)
+    {
+        this->name = name;
+        this->id = id;
+        this->maxCourses = maxCourses;
+        courses = new Course[maxCourses];
+        totalCourses = 0;
+        gradePoints = new float[maxCourses];
+    }
 
-    Student(const Student& stu);
+    Student(const Student& stu)
+    {
+        name = stu.name;
+        id = stu.id;
+        maxCourses = stu.maxCourses;
+        courses = new Course[maxCourses];
+        totalCourses = stu.totalCourses;
+        gradePoints = new float[maxCourses];
 
-    ~Student();
+        for (int i = 0; i < totalCourses; i++)
+        {
+            courses[i] = stu.courses[i];
+            gradePoints[i] = stu.gradePoints[i];
+        }
+    }
 
-    void setName(string name);
-    
-    void setId(int id);
-    
-    void  setInfo(string  name,  int  id);
-    
-    void  addCourse(Course  c);
-    
-    void  addCourse(Course  course,  float  gradePoint);
-    
-    void  setgradePoint(Course  c,  float  gradePoint);
-    
-    void  setgradePoint(float*  gradePoints,  int  n);
-    
-    string getName();
-    
-    float  getCGPA();
-    
-    float  getgradePoint(Course  c);
+    ~Student()
+    {
+        delete[] courses;
+        delete[] gradePoints;
+    }
 
-    int  getTotalCourses();
-    
-    float  getTotalCreditHours();
-    
-    Course  getMostFavoriteCourse();
-    
-    Course  getLeastFavoriteCourse();
-    
-    Course*  getFailedCourses(int  &count);
-    
-    void  display();
+    void setName(string name)
+    {
+        this->name = name;
+    }
+
+    void setId(int id)
+    {
+        this->id = id;
+    }
+
+    void  setInfo(string name, int id)
+    {
+        setName(name);
+        setId(id);
+    }
+
+    void addCourse(Course c)
+    {
+        addCourse(c, 0);
+    }
+
+    void addCourse(Course course, float gradePoint)
+    {
+        if (totalCourses < maxCourses)
+        {
+            for (int i = 0; i < totalCourses; i++)
+            {
+                if (courses[i].getName() == course.getName())
+                {
+                    gradePoints[i] = gradePoint;
+                    return;
+                }
+            }
+
+            courses[totalCourses] = course;
+            gradePoints[totalCourses] = gradePoint;
+            totalCourses++;
+        }
+
+        else cout << "Cannot add more courses to " << name << endl;
+    }
+
+    void setGradePoint(Course c, float gradePoint)
+    {
+        for (int i = 0; i < totalCourses; i++)
+        {
+            if (courses[i].getName() == c.getName())
+            {
+                gradePoints[i] = gradePoint;
+                if (gradePoints[i] < 0) gradePoints[i] = 0;
+                else if (gradePoints[i] > 4) gradePoints[i] = 4;
+                return;
+            }
+        }
+
+        cout << "No course named " << c.getName() << endl;
+    }
+
+    void setGradePoint(float* gradePoints, int n)
+    {
+        totalCourses = n;
+        for (int i = 0; i < n; i++)
+        {
+            this->gradePoints[i] = gradePoints[i];
+            if (gradePoints[i] < 0) gradePoints[i] = 0;
+            else if (gradePoints[i] > 4) gradePoints[i] = 4;
+        }
+    }
+
+    string getName()
+    {
+        return name;
+    }
+
+    float getCGPA()
+    {
+        float totalCreditHour = 0;
+        float weightedGrade = 0;
+        for (int i = 0; i < totalCourses; i++)
+        {
+            totalCreditHour += courses[i].getCreditHour();
+            weightedGrade += courses[i].getCreditHour()*gradePoints[i];
+        }
+
+        float CGPA;
+        if (totalCreditHour == 0) CGPA = 0;
+
+        else CGPA = weightedGrade / totalCreditHour;
+
+        return CGPA;
+    }
+
+    float getGradePoint(Course c)
+    {
+        for (int i = 0; i < totalCourses; i++)
+        {
+            if (courses[i].getName() == c.getName()) return gradePoints[i];
+        }
+        return 0;
+    }
+
+    int getTotalCourses()
+    {
+        return totalCourses;
+    }
+
+    float getTotalCreditHours()
+    {
+        float totalCreditHours = 0;
+        for (int i = 0; i < totalCourses; i++)
+        {
+            if (gradePoints[i] >= 2) totalCreditHours += courses[i].getCreditHour();
+        }
+            
+        return totalCreditHours;
+    }
+
+    Course getMostFavoriteCourse()
+    {
+        int idx = 0;
+        for (int i = 1; i < totalCourses; i++)
+        {
+            if (gradePoints[i] > gradePoints[idx]) idx = i;
+        }
+        return courses[idx];
+    }
+
+    Course getLeastFavoriteCourse()
+    {
+        int idx = 0;
+        for (int i = 1; i < totalCourses; i++)
+        {
+            if (gradePoints[i] < gradePoints[idx]) idx = i;
+        }
+        return courses[idx];
+    }
+
+    Course* getFailedCourses(int& count)
+    {
+        Course* failedCourses = new Course[totalCourses];
+        count = 0;
+        for (int i = 0; i < totalCourses; i++)
+        {
+            if (gradePoints[i] < 2)
+            {
+                failedCourses[count] = courses[i];
+                count++;
+            }
+        }
+        return failedCourses;
+    }
+
+    void  display()
+    {
+        cout << "==================================" << endl;
+        cout << "Student Name: " << name << ", ID: " << id << endl;
+        for (int i = 0; i < totalCourses; i++)
+        {
+            courses[i].display();
+            cout << ", gradePoint: " << gradePoints[i] << endl;
+        }
+        cout << "CGPA: " << getCGPA() << endl;
+        cout << "Total Credit Hours Earned: " << getTotalCreditHours() << endl;
+        cout << "Most Favorite Course: " << getMostFavoriteCourse().getName() << endl;
+        cout << "Least Favorite Course: " << getLeastFavoriteCourse().getName() << endl;
+        cout << "==================================" << endl;
+    }
 };
 
 
 // Global Variables
-Student* students[];
-int totalStudents;
+Student* students[10];
+int totalStudents = 0;
 
 
-Student getTopper();
+Student getTopper()
+{
+    int idx = 0;
+    float maxCGPA = students[0]->getCGPA();
+    for (int i = 1; i < totalStudents; i++)
+    {
+        if (students[i]->getCGPA() > maxCGPA)
+        {
+            idx = i;
+            maxCGPA = students[i]->getCGPA();
+        }
+    }
+    return *(students[idx]);
+}
 
-Student getTopper(Course c);
+Student getTopper(Course c)
+{
+    int idx = 0;
+    float maxGrade = students[0]->getGradePoint(c);
+    for (int i = 1; i < totalStudents; i++)
+    {
+        if (students[i]->getGradePoint(c) > maxGrade)
+        {
+            idx = i;
+            maxGrade = students[i]->getGradePoint(c);
+        }
+    }
+    return *(students[idx]);
+}
 
 
 int main()
@@ -134,7 +330,7 @@ int main()
     s1.addCourse(courses[3]);
     s1.addCourse(courses[4]);
     s1.addCourse(courses[5]);
-    s1.setgradePoint(gradePoints, s1.getTotalCourses());
+    s1.setGradePoint(gradePoints, s1.getTotalCourses());
     s1.display();
 
     Student s2 = Student("Penny", 2, 5);
@@ -142,33 +338,33 @@ int main()
     s2.addCourse(courses[0]);
     s2.addCourse(courses[2]);
     s2.addCourse(courses[5]);
-    s2.setgradePoint(gradePoints, s2.getTotalCourses());
-    s2.setgradePoint(courses[0], 3.25);
+    s2.setGradePoint(gradePoints, s2.getTotalCourses());
+    s2.setGradePoint(courses[0], 3.25);
     s2.display();
 
     Student s3 = s2;
     students[totalStudents++] = &s3;
     s3.setName("Leonard");
     s3.setId(3);
-    s3.setgradePoint(gradePoints, s3.getTotalCourses());
+    s3.setGradePoint(gradePoints, s3.getTotalCourses());
     s3.addCourse(courses[1], 3.75);
     s3.display();
 
     Student s4 = s3;
     students[totalStudents++] = &s4;
     s4.setInfo("Howard", 4);
-    s4.setgradePoint(gradePoints, s4.getTotalCourses());
+    s4.setGradePoint(gradePoints, s4.getTotalCourses());
     s4.addCourse(courses[3], 3.75);
     s4.display();
 
     Student s5 = s4;
     students[totalStudents++] = &s5;
     s5.setInfo("Raj", 5);
-    s5.setgradePoint(gradePoints, s5.getTotalCourses());
-    s5.setgradePoint(courses[0], 1.5);
-    s5.setgradePoint(courses[2], 2.0);
-    s5.setgradePoint(courses[5], 1.75);
-    s5.setgradePoint(courses[3], 3.75);
+    s5.setGradePoint(gradePoints, s5.getTotalCourses());
+    s5.setGradePoint(courses[0], 1.5);
+    s5.setGradePoint(courses[2], 2.0);
+    s5.setGradePoint(courses[5], 1.75);
+    s5.setGradePoint(courses[3], 3.75);
     s5.display();
 
     int failedCount;
@@ -192,97 +388,9 @@ int main()
         Course c = courses[i];
         Student topperInCourse = getTopper(c);
         cout << "Topper in " << c.getName() << ": " << topperInCourse.getName() << endl;
-        cout << "Topper in " << c.getName() << " gradePoint: " << topperInCourse.getgradePoint(c) << endl;
+        cout << "Topper in " << c.getName() << " gradePoint: " << topperInCourse.getGradePoint(c) << endl;
         cout << "==================================" << endl;
     }
 
     return 0;
 }
-
-
-/* Expected Output
-
- Cannot add more courses to Sheldon
- ==================================
- Student Name: Sheldon, ID: 1
- Course Name: CSE107, Credit Hour: 3, gradePoint: 4
- Course Name: CSE105, Credit Hour: 3, gradePoint: 4
- Course Name: CSE108, Credit Hour: 1.5, gradePoint: 3.5
- Course Name: CSE106, Credit Hour: 1.5, gradePoint: 3.5
- Course Name: EEE164, Credit Hour: 0.75, gradePoint: 4
- CGPA: 3.84615
- Total Credit Hours Earned: 9.75
- Most Favorite Course: CSE107
- Least Favorite Course: CSE108
- ==================================
- ==================================
- Student Name: Penny, ID: 2
- Course Name: CSE107, Credit Hour: 3, gradePoint: 3.25
- Course Name: CSE108, Credit Hour: 1.5, gradePoint: 4
- Course Name: ME174, Credit Hour: 0.75, gradePoint: 3.5
- CGPA: 3.5
- Total Credit Hours Earned: 5.25
- Most Favorite Course: CSE108
- Least Favorite Course: CSE107
- ==================================
- ==================================
- Student Name: Leonard, ID: 3
- Course Name: CSE107, Credit Hour: 3, gradePoint: 4
- Course Name: CSE108, Credit Hour: 1.5, gradePoint: 4
- Course Name: ME174, Credit Hour: 0.75, gradePoint: 3.5
- Course Name: CSE105, Credit Hour: 3, gradePoint: 3.75
- CGPA: 3.86364
- Total Credit Hours Earned: 8.25
- Most Favorite Course: CSE107
- Least Favorite Course: ME174
- ==================================
- ==================================
- Student Name: Howard, ID: 4
- Course Name: CSE107, Credit Hour: 3, gradePoint: 4
- Course Name: CSE108, Credit Hour: 1.5, gradePoint: 4
- Course Name: ME174, Credit Hour: 0.75, gradePoint: 3.5
- Course Name: CSE105, Credit Hour: 3, gradePoint: 3.5
- Course Name: CSE106, Credit Hour: 1.5, gradePoint: 3.75
- CGPA: 3.76923
- Total Credit Hours Earned: 9.75
- Most Favorite Course: CSE107
- Least Favorite Course: ME174
- ==================================
- ==================================
- Student Name: Raj, ID: 5
- Course Name: CSE107, Credit Hour: 3, gradePoint: 1.5
- Course Name: CSE108, Credit Hour: 1.5, gradePoint: 2
- Course Name: ME174, Credit Hour: 0.75, gradePoint: 1.75
- Course Name: CSE105, Credit Hour: 3, gradePoint: 3.5
- Course Name: CSE106, Credit Hour: 1.5, gradePoint: 3.75
- CGPA: 2.55769
- Total Credit Hours Earned: 6
- Most Favorite Course: CSE106
- Least Favorite Course: CSE107
- ==================================
- Failed Courses for Raj:
- Course Name: CSE107, Credit Hour: 3
- Course Name: ME174, Credit Hour: 0.75
- ==================================
- Topper: Leonard
- Topper CGPA: 3.86364
- ==================================
- Topper in CSE107: Sheldon
- Topper in CSE107 gradePoint: 4
- ==================================
- Topper in CSE105: Sheldon
- Topper in CSE105 gradePoint: 4
- ==================================
- Topper in CSE108: Penny
- Topper in CSE108 gradePoint: 4
- ==================================
- Topper in CSE106: Howard
- Topper in CSE106 gradePoint: 3.75
- ==================================
- Topper in EEE164: Sheldon
- Topper in EEE164 gradePoint: 4
- ==================================
- Topper in ME174: Penny
- Topper in ME174 gradePoint: 3.5
- ==================================
-*/
