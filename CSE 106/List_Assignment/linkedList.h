@@ -78,7 +78,7 @@ void insert(int item, linkedList* list)
 int delete_cur(linkedList* list)
 {
     // implement deletion of current index function
-    if (list->cur->prev != NULL)
+    if (list->cur->prev != NULL) // cur is not dummy head
     {
         node* toDel = list->cur;
         int value = toDel->element;
@@ -99,7 +99,7 @@ void append(int item, linkedList* list)
     // implement append function
     insertNode(item, list->tail);
     list->tail = list->tail->next;
-    if (list->cur->prev == NULL) list->cur = list->tail;
+    if (list->cur->prev == NULL) list->cur = list->tail; // List was empty 
 
     print(list);
 }
@@ -125,7 +125,7 @@ void prev(int n, linkedList* list)
         for (int i = 0; i < n && list->cur->prev->prev != NULL; i++)
             list->cur = list->cur->prev;
     }
-    
+
     print(list);
 }
 
@@ -149,7 +149,6 @@ void clear(linkedList* list)
     // implement list clearing function
     free_list(list);
     init(list);
-
     print(list);
 }
 
@@ -159,9 +158,11 @@ void delete_item(int item, linkedList* list)
     node* toDel = findItem(item, list);
     if (toDel == NULL) printf("%d not found\n", item);
 
+    else if (toDel == list->cur) delete_cur(list);
+
     else
     {
-        if (list->cur == toDel) list->cur = list->cur->next;
+        if (toDel == list->tail) list->tail = list->tail->prev;
         deleteNode(toDel);
         print(list);
     }
