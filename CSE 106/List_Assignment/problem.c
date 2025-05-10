@@ -1,6 +1,6 @@
 #include <stdio.h>
-// #include "arrayList.h"
-#include "linkedList.h"
+#include "arrayList.h"
+// #include "linkedList.h"
 
 int main()
 {
@@ -9,8 +9,8 @@ int main()
         return 1;
     }
 
-    // arrayList dal, fl;
-    linkedList dal, fl;
+    arrayList dal, fl;
+    // linkedList dal, fl;
     
     // initialize the lists
     init(&dal);
