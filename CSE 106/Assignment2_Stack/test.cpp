@@ -159,31 +159,53 @@ bool test_top(Stack* stack) {
 // TODO: Implement test for the size method
 bool test_size(Stack* stack) {
     // TODO: Implement this test case
-    return true; // Placeholder
+    stack->clear();
+    stack->push(30);
+    stack->push(40);
+    int size = stack->size();
+    return size == 2; // Placeholder
 }
 
 // TODO: Implement test for the empty method
 bool test_empty(Stack* stack) {
     // TODO: Implement this test case
-    return true; // Placeholder
+    stack->clear();
+    return stack->empty(); // Placeholder
 }
 
 // TODO: Implement test for the clear method
 bool test_clear(Stack* stack) {
     // TODO: Implement this test case
-    return true; // Placeholder
+    stack->clear();
+    stack->push(30);
+    stack->push(40);
+    stack->clear();
+    return stack->empty(); // Placeholder
 }
 
 // TODO: Implement test for multiple push/pop operations
 bool test_multiple_push_pop(Stack* stack) {
     // TODO: Implement this test case to verify LIFO behavior with multiple elements
+    stack->clear();
+    stack->push(60);
+    stack->push(30);
+    stack->push(40);
+    if (stack->pop() != 40) return false;
+    if (stack->top() != 30 || stack->size() != 2) return false;
+    if (stack->pop() != 30) return false;
+    if (stack->top() != 60 || stack->size() != 1) return false;
+
     return true; // Placeholder
 }
 
 // TODO: Implement test for edge cases (empty stack operations)
 bool test_empty_stack_operations(Stack* stack) {
     // TODO: Test behavior when popping or checking top of an empty stack
-    return true; // Placeholder
+    stack->clear();
+    stack->push(30);
+    stack->push(40);
+    stack->clear();
+    return (stack->pop() == -1) && (stack->top() == -1); // Placeholder
 }
 
 // TODO: Implement test for ArrayStack resizing
@@ -195,6 +217,12 @@ bool test_array_resizing(Stack* stack) {
 // TODO: Implement test for large number of operations
 bool test_stress(Stack* stack) {
     // TODO: Test stability with a large number of push and pop operations
+    stack->clear();
+    for (int i = 0; i < 1000; i++) stack->push(i*2);
+    if (stack->size() != 1000) return false;
+    for (int i = 0; i < 400; i++) stack->pop();
+    if (stack->top() != 599) return false;
+
     return true; // Placeholder
 }
 
