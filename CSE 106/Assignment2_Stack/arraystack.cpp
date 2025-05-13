@@ -85,8 +85,8 @@ void ArrayStack::print() const {
 
     else
     {
-        std::cout << "|" << data[0];
-        for (int i = 1; i < current_size; i++) std::cout << ", " << data[i];
+        std::cout << "|" << data[current_size-1];
+        for (int i = current_size-2; i >= 0; i--) std::cout << ", " << data[i];
         std::cout << ">" << std::endl;
     }
 }
