@@ -221,7 +221,7 @@ bool test_stress(Stack* stack) {
     for (int i = 0; i < 1000; i++) stack->push(i*2);
     if (stack->size() != 1000) return false;
     for (int i = 0; i < 400; i++) stack->pop();
-    if (stack->top() != 599) return false;
+    if (stack->top() != 1198) return false;
 
     return true; // Placeholder
 }

@@ -106,26 +106,6 @@ void ArrayStack::resize(int new_capacity) {
         delete[] data;
         data = newData;
 
-        std::cout << "New capacity: " << capacity << std::endl;
+        // std::cout << "New capacity: " << capacity << std::endl;
     }
-}
-
-
-
-
-// Code THAT MUST BE DELETED
-int main()
-{
-    ArrayStack* arr = new ArrayStack();
-    
-    arr->push(10);
-    arr->push(20);
-    arr->push(5);
-    arr->print();
-    std::cout << arr->pop() << "--" << arr->top() << std::endl;
-    std::cout << "Size: " << arr->size() << std::endl;
-    arr->clear();
-    arr->print();
-    std::cout << arr->pop() << "--" << arr->top() << std::endl;
-    std::cout << "Size: " << arr->size() << std::endl;
 }

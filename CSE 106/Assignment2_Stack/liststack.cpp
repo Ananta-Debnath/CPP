@@ -108,23 +108,3 @@ void ListStack::print() const {
         std::cout << ">" << std::endl;
     }
 }
-
-
-
-
-// Code THAT MUST BE DELETED
-int main()
-{
-    ListStack* arr = new ListStack();
-    
-    arr->push(10);
-    arr->push(20);
-    arr->push(5);
-    arr->print();
-    std::cout << arr->pop() << "--" << arr->top() << std::endl;
-    std::cout << "Size: " << arr->size() << std::endl;
-    arr->clear();
-    arr->print();
-    std::cout << arr->pop() << "--" << arr->top() << std::endl;
-    std::cout << "Size: " << arr->size() << std::endl;
-}
