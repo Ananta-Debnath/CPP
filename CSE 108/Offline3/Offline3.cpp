@@ -43,7 +43,13 @@ public:
         simplify();
     }
 
-    Fraction(float f);
+    Fraction(float f)
+    {
+        numerator = (int)(f*100);
+        denominator = 100;
+
+        simplify();
+    }
 
     void simplify()
     {
@@ -68,53 +74,128 @@ public:
         return denominator;
     }
 
-    Fraction operator+(const Fraction& f);
+    float value() const
+    {
+        return (float)numerator / denominator;
+    }
 
-    Fraction operator+(const float f);
+    Fraction operator+(const Fraction& f)
+    {
+        int num = (numerator * f.denominator) + (f.numerator * denominator);
+        int denom = denominator * f.denominator;
+        return Fraction(num, denom);
+    }
 
+    Fraction operator+(const float f)
+    {
+        Fraction fr(f);
+        return (*this + fr);
+    }
+
+    Fraction operator-(const Fraction& f)
+    {
+        int num = (numerator * f.denominator) - (f.numerator * denominator);
+        int denom = denominator * f.denominator;
+        return Fraction(num, denom);
+    }
+
+    Fraction operator-(const float f)
+    {
+        Fraction fr(f);
+        return (*this - fr);
+    }
+
+    Fraction operator*(const Fraction& f)
+    {
+        return Fraction(numerator * f.numerator, denominator * f.denominator);
+    }
+
+    Fraction operator*(const float f)
+    {
+        Fraction fr(f);
+        return (*this * fr);
+    }
+
+    Fraction operator/(const Fraction& f)
+    {
+        if (f.numerator == 0)
+        {
+            cout << "Can not divide by 0" << endl;
+            return *this;
+        }
+        else return Fraction(numerator * f.denominator, denominator * f.numerator);
+    }
+
+    Fraction operator/(const float f)
+    {
+        Fraction fr(f);
+        return (*this / fr);
+    }
+
+    Fraction operator+=(const Fraction& f)
+    {
+        *this = *this + f;
+        return *this;
+    }
+
+    Fraction operator+=(const float f)
+    {
+        *this = *this + f;
+        return *this;
+    }
+
+    Fraction operator-=(const Fraction& f)
+    {
+        *this = *this - f;
+        return *this;
+    }
+
+    Fraction operator-=(const float f)
+    {
+        *this = *this - f;
+        return *this;
+    }
+
+    Fraction operator*=(const Fraction& f)
+    {
+        *this = *this * f;
+        return *this;
+    }
+
+    Fraction operator*=(const float f)
+    {
+        *this = *this * f;
+        return *this;
+    }
+
+    Fraction operator/=(const Fraction& f)
+    {
+        *this = *this / f;
+        return *this;
+    }
+
+    Fraction operator/=(const float f)
+    {
+        *this = *this / f;
+        return *this;
+    }
+
+    // Friend Functions
     friend Fraction operator+(const float f1, const Fraction& f2);
-
-    Fraction operator-(const Fraction& f);
-
-    Fraction operator-(const float f);
 
     friend Fraction operator-(const float f1, const Fraction& f2);
 
-    Fraction operator*(const Fraction& f);
-
-    Fraction operator*(const float f);
-
     friend Fraction operator*(const float f1, const Fraction& f2);
-
-    Fraction operator/(const Fraction& f);
-
-    Fraction operator/(const float f);
 
     friend Fraction operator/(const float f1, const Fraction& f2);
 
-    Fraction operator+=(const Fraction& f);
+    friend float operator+=(float& f1, const Fraction& f2);
+    
+    friend float operator-=(float& f1, const Fraction& f2);
 
-    Fraction operator+=(const float f);
+    friend float operator*=(float& f1, const Fraction& f2);
 
-    friend float operator+=(const float f1, const Fraction& f2);
-
-    Fraction operator-=(const Fraction& f);
-
-    Fraction operator-=(const float f);
-
-    friend float operator-=(const float f1, const Fraction& f2);
-
-    Fraction operator*=(const Fraction& f);
-
-    Fraction operator*=(const float f);
-
-    friend float operator*=(const float f1, const Fraction& f2);
-
-    Fraction operator/=(const Fraction& f);
-
-    Fraction operator/=(const float f);
-
-    friend float operator/=(const float f1, const Fraction& f2);
+    friend float operator/=(float& f1, const Fraction& f2);
 
     friend ostream& operator<<(ostream& os, const Fraction& f);
 };
@@ -143,11 +224,12 @@ public:
 
     FractionVector operator*(const Fraction& f);
 
-    friend FractionVector operator*(const Fraction& f, const FractionVector& fv);
-
     FractionVector operator/(const FractionVector& fv);
 
     Fraction value();
+
+    // Friend Functions
+    friend FractionVector operator*(const Fraction& f, const FractionVector& fv);
 
     friend ostream& operator<<(ostream& os, const FractionVector& fv);
 
@@ -180,8 +262,6 @@ public:
     FractionMatrix operator*(const FractionMatrix& fm);
 
     FractionMatrix operator*(const Fraction& f);
-    
-    friend FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm);
 
     FractionMatrix operator/(const Fraction& f);
 
@@ -189,8 +269,143 @@ public:
 
     FractionMatrix transpose();
 
+    // Friend Functions
+    friend FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm);
+
     friend ostream& operator<<(ostream& os, const FractionMatrix& fm);
 
     ~FractionMatrix();
 };
 
+
+// Implement Friend Functions
+
+// Fraction
+Fraction operator+(const float f1, const Fraction& f2)
+{
+    Fraction f(f1);
+    return (f + f2);
+}
+
+Fraction operator-(const float f1, const Fraction& f2)
+{
+    Fraction f(f1);
+    return (f - f2);
+}
+
+Fraction operator*(const float f1, const Fraction& f2)
+{
+    Fraction f(f1);
+    return (f * f2);
+}
+
+Fraction operator/(const float f1, const Fraction& f2)
+{
+    Fraction f(f1);
+    return (f / f2);
+}
+
+float operator+=(float& f1, const Fraction& f2)
+{
+    f1 += f2.value();
+    return f1;
+}
+
+float operator-=(float& f1, const Fraction& f2)
+{
+    f1 -= f2.value();
+    return f1;
+}
+
+float operator*=(float& f1, const Fraction& f2)
+{
+    f1 *= f2.value();
+    return f1;
+}
+
+float operator/=(float& f1, const Fraction& f2)
+{
+    f1 /= f2.value();
+    return f1;
+}
+
+ostream& operator<<(ostream& os, const Fraction& f)
+{
+    os << f.numerator << "/" << f.denominator;
+    return os;
+}
+
+
+
+int main()
+{
+    // Fraction Test Cases
+    cout << "Fraction Tests" << endl;
+    cout << "==================================" << endl;
+
+    Fraction f1(6, 17);
+    Fraction f2(8, 24);
+    float f3 = 2.84;
+
+    cout << "f1 = " << f1 << endl;
+    cout << "f2 = " << f2 << endl;
+    cout << "Fraction of f3 = " << Fraction(f3) << endl;
+    cout << "Value of f1 = " << f1.value() << endl;
+    cout << endl;
+
+    cout << "Fraction + Fraction:" << endl;
+    cout << "f1 + f2 = " << (f1 + f2) << endl;
+    cout << "f1 - f2 = " << (f1 - f2) << endl;
+    cout << "f1 * f2 = " << (f1 * f2) << endl;
+    cout << "f1 / f2 = " << (f1 / f2) << endl;
+    cout << endl;
+
+    cout << "Fraction + Float:" << endl;
+    cout << "f1 + f3 = " << (f1 + f3) << endl;
+    cout << "f1 - f3 = " << (f1 - f3) << endl;
+    cout << "f1 * f3 = " << (f1 * f3) << endl;
+    cout << "f1 / f3 = " << (f1 / f3) << endl;
+    cout << endl;
+
+    cout << "Float + Fraction:" << endl;
+    cout << "f3 + f2 = " << (f3 + f2) << endl;
+    cout << "f3 - f2 = " << (f3 - f2) << endl;
+    cout << "f3 * f2 = " << (f3 * f2) << endl;
+    cout << "f3 / f2 = " << (f3 / f2) << endl;
+    cout << endl;
+
+    cout << "Fraction += Fraction:" << endl;
+    f1 += f2;
+    cout << "f1 += f2 -> " << f1 << endl;
+    f1 -= f2;
+    cout << "f1 -= f2 -> " << f1 << endl;
+    f1 *= f2;
+    cout << "f1 *= f2 -> " << f1 << endl;
+    f1 /= f2;
+    cout << "f1 /= f2 -> " << f1 << endl;
+    cout << endl;
+
+    cout << "Fraction += Float:" << endl;
+    f1 += f3;
+    cout << "f1 += f3 -> " << f1 << endl;
+    f1 -= f3;
+    cout << "f1 -= f3 -> " << f1 << endl;
+    f1 *= f3;
+    cout << "f1 *= f3 -> " << f1 << endl;
+    f1 /= f3;
+    cout << "f1 /= f3 -> " << f1 << endl;
+    cout << endl;
+
+    cout << "Float += Fraction:" << endl;
+    f3 += f2;
+    cout << "f3 += f2 -> " << f3 << endl;
+    f3 -= f2;
+    cout << "f3 -= f2 -> " << f3 << endl;
+    f3 *= f2;
+    cout << "f3 *= f2 -> " << f3 << endl;
+    f3 /= f2;
+    cout << "f3 /= f2 -> " << f3 << endl;
+    cout << endl;
+    
+    cout << "==================================" << endl;
+}

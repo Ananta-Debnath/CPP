@@ -72,47 +72,48 @@ public:
 
     Fraction operator+(const float f);
 
-    friend Fraction operator+(const float f1, const Fraction& f2);
-
     Fraction operator-(const Fraction& f);
 
     Fraction operator-(const float f);
-
-    friend Fraction operator-(const float f1, const Fraction& f2);
 
     Fraction operator*(const Fraction& f);
 
     Fraction operator*(const float f);
 
-    friend Fraction operator*(const float f1, const Fraction& f2);
-
     Fraction operator/(const Fraction& f);
 
     Fraction operator/(const float f);
-
-    friend Fraction operator/(const float f1, const Fraction& f2);
 
     Fraction operator+=(const Fraction& f);
 
     Fraction operator+=(const float f);
 
-    friend float operator+=(const float f1, const Fraction& f2);
-
     Fraction operator-=(const Fraction& f);
 
     Fraction operator-=(const float f);
-
-    friend float operator-=(const float f1, const Fraction& f2);
 
     Fraction operator*=(const Fraction& f);
 
     Fraction operator*=(const float f);
 
-    friend float operator*=(const float f1, const Fraction& f2);
-
     Fraction operator/=(const Fraction& f);
 
     Fraction operator/=(const float f);
+
+    // Friend Functions
+    friend Fraction operator+(const float f1, const Fraction& f2);
+
+    friend Fraction operator-(const float f1, const Fraction& f2);
+
+    friend Fraction operator*(const float f1, const Fraction& f2);
+
+    friend Fraction operator/(const float f1, const Fraction& f2);
+
+    friend float operator+=(const float f1, const Fraction& f2);
+
+    friend float operator-=(const float f1, const Fraction& f2);
+
+    friend float operator*=(const float f1, const Fraction& f2);
 
     friend float operator/=(const float f1, const Fraction& f2);
 
@@ -143,11 +144,12 @@ public:
 
     FractionVector operator*(const Fraction& f);
 
-    friend FractionVector operator*(const Fraction& f, const FractionVector& fv);
-
     FractionVector operator/(const FractionVector& fv);
 
     Fraction value();
+
+    // Friend Functions
+    friend FractionVector operator*(const Fraction& f, const FractionVector& fv);
 
     friend ostream& operator<<(ostream& os, const FractionVector& fv);
 
@@ -180,14 +182,15 @@ public:
     FractionMatrix operator*(const FractionMatrix& fm);
 
     FractionMatrix operator*(const Fraction& f);
-    
-    friend FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm);
 
     FractionMatrix operator/(const Fraction& f);
 
     FractionMatrix operator%(const FractionMatrix& fm);
 
     FractionMatrix transpose();
+
+    // Friend Functions
+    friend FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm);
 
     friend ostream& operator<<(ostream& os, const FractionMatrix& fm);
 
