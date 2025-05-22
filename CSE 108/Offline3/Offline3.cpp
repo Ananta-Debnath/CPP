@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 
@@ -14,19 +15,7 @@ class Fraction
     }
 
 public:
-    Fraction()
-    {
-        numerator = 0;
-        denominator = 1;
-    }
-
-    Fraction(int num)
-    {
-        numerator = num;
-        denominator = 1;
-    }
-
-    Fraction(int num, int denom)
+    Fraction(int num = 0, int denom = 1)
     {
         if (denom == 0)
         {
@@ -79,44 +68,55 @@ public:
         return (float)numerator / denominator;
     }
 
-    Fraction operator+(const Fraction& f)
+    Fraction squareRoot() const
+    {
+        if (this->value() >= 0) return Fraction(sqrt(this->value()));
+
+        else
+        {
+            cout << "Cannot calculate square root of negative Fractions!" << endl;
+            exit(-1);
+        }
+    }
+
+    Fraction operator+(const Fraction& f) const
     {
         int num = (numerator * f.denominator) + (f.numerator * denominator);
         int denom = denominator * f.denominator;
         return Fraction(num, denom);
     }
 
-    Fraction operator+(const float f)
+    Fraction operator+(const float f) const
     {
         Fraction fr(f);
         return (*this + fr);
     }
 
-    Fraction operator-(const Fraction& f)
+    Fraction operator-(const Fraction& f) const
     {
         int num = (numerator * f.denominator) - (f.numerator * denominator);
         int denom = denominator * f.denominator;
         return Fraction(num, denom);
     }
 
-    Fraction operator-(const float f)
+    Fraction operator-(const float f) const
     {
         Fraction fr(f);
         return (*this - fr);
     }
 
-    Fraction operator*(const Fraction& f)
+    Fraction operator*(const Fraction& f) const
     {
         return Fraction(numerator * f.numerator, denominator * f.denominator);
     }
 
-    Fraction operator*(const float f)
+    Fraction operator*(const float f) const
     {
         Fraction fr(f);
         return (*this * fr);
     }
 
-    Fraction operator/(const Fraction& f)
+    Fraction operator/(const Fraction& f) const
     {
         if (f.numerator == 0)
         {
@@ -126,7 +126,7 @@ public:
         else return Fraction(numerator * f.denominator, denominator * f.numerator);
     }
 
-    Fraction operator/(const float f)
+    Fraction operator/(const float f) const
     {
         Fraction fr(f);
         return (*this / fr);
@@ -208,32 +208,129 @@ class FractionVector
     int fractionCount;
 
 public:
-    FractionVector();
+    FractionVector(int capacity = 1, int fractionCount = 0, Fraction* fractions = NULL)
+    {
+        this->capacity = capacity;
+        this->fractions = new Fraction[capacity];
+        this->fractionCount = 0;
 
-    FractionVector(int capacity);
+        if (fractions != NULL)
+        {
+            for (int i = 0; i < fractionCount; i++) this->addFraction(fractions[i]);
+        }
+    }
 
-    FractionVector(const FractionVector& fv);
+    FractionVector(const FractionVector& fv)
+    {
+        capacity = fv.capacity;
+        fractionCount = 0;
+        fractions = new Fraction[capacity];
 
-    Fraction& operator[](int idx);
+        for (int i = 0; i < fv.fractionCount; i++) addFraction(fv.fractions[i]);
+    }
 
-    FractionVector operator+(const FractionVector& fv);
+    FractionVector& operator=(const FractionVector& fv)
+    {
+        if (fractions != NULL) delete[] fractions;
 
-    FractionVector operator-(const FractionVector& fv);
+        capacity = fv.capacity;
+        fractionCount = 0;
+        fractions = new Fraction[capacity];
 
-    FractionVector operator*(const FractionVector& fv); // Dot Product
+        for (int i = 0; i < fv.fractionCount; i++) addFraction(fv.fractions[i]);
 
-    FractionVector operator*(const Fraction& f);
+        return *this;
+    }
 
-    FractionVector operator/(const FractionVector& fv);
+    void addFraction(const Fraction& f)
+    {
+        if (fractionCount < capacity) fractions[fractionCount++] = f;
 
-    Fraction value();
+        else cout << "No more space for adding fraction!" << endl;
+    }
+
+    Fraction& operator[](int idx) const
+    {
+        if (idx < fractionCount && idx >= 0) return fractions[idx];
+
+        else
+        {
+            throw runtime_error("Index out of range!");
+        }
+    }
+
+    FractionVector operator+(const FractionVector& fv) const
+    {
+        FractionVector newVector = *this;
+        if (fractionCount == fv.fractionCount)
+        {
+            for (int i = 0; i < fractionCount; i++) newVector[i] += fv[i];
+        }
+        else cout << *this << " and " << fv << " have different size" << endl;
+
+        return newVector;
+    }
+
+    FractionVector operator-(const FractionVector& fv) const
+    {
+        FractionVector newVector = *this;
+        if (fractionCount == fv.fractionCount)
+        {
+            for (int i = 0; i < fractionCount; i++) newVector[i] -= fv[i];
+        }
+        else cout << *this << " and " << fv << " have different size" << endl;
+
+        return newVector;
+    }
+
+    Fraction operator*(const FractionVector& fv) const // Dot Product
+    {
+        Fraction dot;
+
+        if (fractionCount == fv.fractionCount)
+        {
+            for (int i = 0; i < fractionCount; i++) dot += (fractions[i] * fv[i]);
+        }
+        else cout << *this << " and " << fv << " have different size" << endl;
+
+        return dot;
+    }
+
+    FractionVector operator*(const Fraction& f) const
+    {
+        FractionVector newVector = *this;
+        for (int i = 0; i < fractionCount; i++) newVector[i] *= f;
+
+        return newVector;
+    }
+
+    FractionVector operator/(const Fraction& f) const
+    {
+        FractionVector newVector = *this;
+        for (int i = 0; i < fractionCount; i++) newVector[i] /= f;
+
+        return newVector;
+    }
+
+    Fraction value() const
+    {
+        Fraction val;
+        for (int i = 0; i < fractionCount; i++) val += (fractions[i] * fractions[i]);
+
+        val = val.squareRoot();
+        return val;
+    }
+
+    ~FractionVector()
+    {
+        if (fractions != NULL) delete[] fractions;
+        // cout << "FractionVector Deleted!" << endl;
+    }
 
     // Friend Functions
     friend FractionVector operator*(const Fraction& f, const FractionVector& fv);
 
     friend ostream& operator<<(ostream& os, const FractionVector& fv);
-
-    ~FractionVector();
 };
 
 
@@ -331,7 +428,30 @@ float operator/=(float& f1, const Fraction& f2)
 
 ostream& operator<<(ostream& os, const Fraction& f)
 {
-    os << f.numerator << "/" << f.denominator;
+    os << f.numerator;
+    if (f.denominator != 1) os << "/" << f.denominator;
+    return os;
+}
+
+// FractionVector
+FractionVector operator*(const Fraction& f, const FractionVector& fv)
+{
+    return (fv * f);
+}
+
+ostream& operator<<(ostream& os, const FractionVector& fv)
+{
+    os << "[";
+
+    if (fv.fractionCount == 0) os << ".";
+
+    else
+    {
+        os << fv[0];
+        for (int i = 1; i < fv.fractionCount; i++) os << ", " << fv[i];
+    }
+
+    os << "]";
     return os;
 }
 
@@ -406,6 +526,66 @@ int main()
     f3 /= f2;
     cout << "f3 /= f2 -> " << f3 << endl;
     cout << endl;
-    
+
+    cout << "==================================" << endl << endl;
+
+
+    // FractionVector Test Cases
+    cout << "FractionVector Tests" << endl;
     cout << "==================================" << endl;
+
+    FractionVector fv1(3), fv2(3), fv3(2);
+    fv1.addFraction(f1+f2);
+    fv1.addFraction(f1-f2);
+    fv1.addFraction(f1);
+    fv2.addFraction(f2);
+    fv2.addFraction(f1*f2);
+    fv2.addFraction(f2-f1);
+    fv3.addFraction(f3);
+    fv3.addFraction(f3*f2);
+
+    fv1.addFraction(f1);
+    cout << endl;
+
+    cout << "fv1 = " << fv1 << endl;
+    cout << "fv2 = " << fv2 << endl;
+    cout << "fv3 = " << fv3 << endl;
+    cout << endl;
+
+    cout << "Value of fv1 = " << fv1.value() << endl;
+    cout << endl;
+
+    cout << "Access Element:" << endl;
+    cout << "fv1[1] = " << fv1[1] << endl;
+    cout << endl;
+
+    // cout << "FractionVector + FractionVector:" << endl;
+    cout << "fv1 + fv2 = " << (fv1 + fv2) << endl;
+    cout << "fv1 - fv2 = " << (fv1 - fv2) << endl;
+    cout << endl;
+
+    // cout << "FractionVector * Fraction:" << endl;
+    cout << "fv1 * f1 = " << (fv1 * f1) << endl;
+    cout << "f1 * fv2 = " << (f1 * fv2) << endl;
+    cout << "fv1 / f1 = " << (fv1 / f1) << endl;
+    cout << endl;
+
+    cout << "Dot Product:" << endl;
+    cout << "fv1 * fv2 = " << (fv1 * fv2) << endl;
+    cout << endl;
+
+    cout << "Invalid Operation:" << endl;
+    fv1 + fv3;
+    fv3 - fv2;
+    fv1 * fv3;
+    try
+    {
+        fv1[4];
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << endl;
+    }
+
+    cout << "==================================" << endl << endl;
 }

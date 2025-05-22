@@ -68,21 +68,21 @@ public:
         return denominator;
     }
 
-    Fraction operator+(const Fraction& f);
+    Fraction operator+(const Fraction& f) const;
 
-    Fraction operator+(const float f);
+    Fraction operator+(const float f) const;
 
-    Fraction operator-(const Fraction& f);
+    Fraction operator-(const Fraction& f) const;
 
-    Fraction operator-(const float f);
+    Fraction operator-(const float f) const;
 
-    Fraction operator*(const Fraction& f);
+    Fraction operator*(const Fraction& f) const;
 
-    Fraction operator*(const float f);
+    Fraction operator*(const float f) const;
 
-    Fraction operator/(const Fraction& f);
+    Fraction operator/(const Fraction& f) const;
 
-    Fraction operator/(const float f);
+    Fraction operator/(const float f) const;
 
     Fraction operator+=(const Fraction& f);
 
@@ -134,19 +134,19 @@ public:
 
     FractionVector(const FractionVector& fv);
 
-    Fraction& operator[](int idx);
+    Fraction& operator[](int idx) const;
 
-    FractionVector operator+(const FractionVector& fv);
+    FractionVector operator+(const FractionVector& fv) const;
 
-    FractionVector operator-(const FractionVector& fv);
+    FractionVector operator-(const FractionVector& fv) const;
 
-    FractionVector operator*(const FractionVector& fv); // Dot Product
+    Fraction operator*(const FractionVector& fv) const; // Dot Product
 
-    FractionVector operator*(const Fraction& f);
+    FractionVector operator*(const Fraction& f) const;
 
-    FractionVector operator/(const FractionVector& fv);
+    FractionVector operator/(const Fraction& f) const;
 
-    Fraction value();
+    Fraction value() const;
 
     // Friend Functions
     friend FractionVector operator*(const Fraction& f, const FractionVector& fv);
@@ -161,6 +161,8 @@ class FractionMatrix
 {
     int rowNum;
     int colNum;
+    int rowCapacity;
+    int colCapacity;
     FractionVector* row;
     FractionVector* column;
 
@@ -171,23 +173,23 @@ public:
 
     FractionMatrix(const FractionMatrix& fm);
 
-    FractionVector getColumn(int idx);
+    FractionVector getColumn(int idx) const;
 
-    FractionVector& operator[](int idx);
+    FractionVector& operator[](int idx) const;
 
-    FractionMatrix operator+(const FractionMatrix& fm);
+    FractionMatrix operator+(const FractionMatrix& fm) const;
 
-    FractionMatrix operator-(const FractionMatrix& fm);
+    FractionMatrix operator-(const FractionMatrix& fm) const;
 
-    FractionMatrix operator*(const FractionMatrix& fm);
+    FractionMatrix operator*(const FractionMatrix& fm) const;
 
-    FractionMatrix operator*(const Fraction& f);
+    FractionMatrix operator*(const Fraction& f) const;
 
-    FractionMatrix operator/(const Fraction& f);
+    FractionMatrix operator/(const Fraction& f) const;
 
-    FractionMatrix operator%(const FractionMatrix& fm);
+    FractionMatrix operator%(const FractionMatrix& fm) const;
 
-    FractionMatrix transpose();
+    FractionMatrix transpose() const;
 
     // Friend Functions
     friend FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm);
