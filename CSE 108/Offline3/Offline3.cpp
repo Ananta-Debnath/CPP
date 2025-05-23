@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip> 
 #include <cmath>
 using namespace std;
 
@@ -19,10 +20,7 @@ public:
     {
         if (denom == 0)
         {
-            numerator = num;
-            denominator = 1;
-            cout << "Denominator cannot be 0" << endl;
-            cout << "Denominator replaced by 1" << endl;
+            throw runtime_error ("Denominator cannot be zero!");
         }
         else
         {
@@ -34,7 +32,7 @@ public:
 
     Fraction(float f)
     {
-        numerator = (int)(f*100);
+        numerator = (int)(f * 100);
         denominator = 100;
 
         simplify();
@@ -134,7 +132,7 @@ public:
 
     Fraction operator+=(const Fraction& f)
     {
-        *this = *this + f;
+        *this = (*this) + f;
         return *this;
     }
 
@@ -223,10 +221,26 @@ public:
     FractionVector(const FractionVector& fv)
     {
         capacity = fv.capacity;
-        fractionCount = 0;
+        fractionCount = fv.fractionCount;
         fractions = new Fraction[capacity];
 
-        for (int i = 0; i < fv.fractionCount; i++) addFraction(fv.fractions[i]);
+        for (int i = 0; i < fv.fractionCount; i++) fractions[i] = fv.fractions[i];
+    }
+
+    void setCapacity(int capacity)
+    {
+        if (capacity > 0)
+        {
+            if (fractionCount > capacity) fractionCount = capacity;
+
+            this->capacity = capacity;
+            Fraction* newFractions = new Fraction[capacity];
+
+            for (int i = 0; i < fractionCount; i++) newFractions[i] = fractions[i];
+
+            delete[] fractions;
+            fractions = newFractions;
+        }
     }
 
     FractionVector& operator=(const FractionVector& fv)
@@ -242,6 +256,11 @@ public:
         return *this;
     }
 
+    int size() const
+    {
+        return fractionCount;
+    }
+
     void addFraction(const Fraction& f)
     {
         if (fractionCount < capacity) fractions[fractionCount++] = f;
@@ -253,10 +272,7 @@ public:
     {
         if (idx < fractionCount && idx >= 0) return fractions[idx];
 
-        else
-        {
-            throw runtime_error("Index out of range!");
-        }
+        else throw runtime_error("Index out of range!");
     }
 
     FractionVector operator+(const FractionVector& fv) const
@@ -315,7 +331,8 @@ public:
     Fraction value() const
     {
         Fraction val;
-        for (int i = 0; i < fractionCount; i++) val += (fractions[i] * fractions[i]);
+        for (int i = 0; i < fractionCount; i++)
+            val += (fractions[i] * fractions[i]);
 
         val = val.squareRoot();
         return val;
@@ -338,40 +355,228 @@ class FractionMatrix
 {
     int rowNum;
     int colNum;
+    int rowCapacity;
+    int colCapacity;
     FractionVector* row;
-    FractionVector* column;
+    FractionVector* col;
 
 public:
-    FractionMatrix();
+    FractionMatrix(int rowCapacity = 1, int colCapacity = 1, int rowNum = 0, FractionVector* row = NULL)
+    {
+        this->rowCapacity = rowCapacity;
+        this->colCapacity = colCapacity;
+        this->rowNum = 0;
+        colNum = 0;
+        this->row = new FractionVector[rowCapacity];
+        col = new FractionVector[colCapacity];
 
-    FractionMatrix(FractionVector* row, int rowNum);
+        for (int i = 0; i < rowCapacity; i++) this->row[i] = FractionVector(colCapacity);
+        for (int i = 0; i < colCapacity; i++) col[i] = FractionVector(rowCapacity);
 
-    FractionMatrix(const FractionMatrix& fm);
+        if (row != NULL && row[0].size() <= colCapacity)
+        {
+            for (int i = 0; i < rowNum; i++) addRow(row[i]);
+        }
+    }
 
-    FractionVector getColumn(int idx);
+    FractionMatrix(const FractionMatrix& fm)
+    {
+        rowCapacity = fm.rowCapacity;
+        colCapacity = fm.colCapacity;
+        rowNum = fm.rowNum;
+        colNum = fm.colNum;
+        row = new FractionVector[rowCapacity];
+        col = new FractionVector[colCapacity];
 
-    FractionVector& operator[](int idx);
+        for (int i = 0; i < rowCapacity; i++) row[i] = fm.row[i];
+        for (int i = 0; i < colCapacity; i++) col[i] = fm.col[i];
+    }
 
-    FractionMatrix operator+(const FractionMatrix& fm);
+    FractionMatrix operator=(const FractionMatrix& fm)
+    {
+        if (row != NULL) delete[] row;
+        if (col != NULL) delete[] col;
 
-    FractionMatrix operator-(const FractionMatrix& fm);
+        rowCapacity = fm.rowCapacity;
+        colCapacity = fm.colCapacity;
+        rowNum = fm.rowNum;
+        colNum = fm.colNum;
+        row = new FractionVector[rowCapacity];
+        col = new FractionVector[colCapacity];
 
-    FractionMatrix operator*(const FractionMatrix& fm);
+        for (int i = 0; i < rowCapacity; i++) row[i] = fm.row[i];
+        for (int i = 0; i < colCapacity; i++) col[i] = fm.col[i];
+    }
 
-    FractionMatrix operator*(const Fraction& f);
+    void setColumn()
+    {
+        for (int i = 0; i < colNum; i++)
+        {
+            for (int j = 0; j < rowNum; j++)
+            {
+                col[i][j] = row[j][i];
+            }
+        }
+    }
 
-    FractionMatrix operator/(const Fraction& f);
+    void addRow(const FractionVector& fv)
+    {
+        if (colNum == 0) colNum = fv.size();
+        
+        if (rowNum < rowCapacity && fv.size() == colNum)
+        {
+            row[rowNum] = fv;
+            row[rowNum].setCapacity(colCapacity);
 
-    FractionMatrix operator%(const FractionMatrix& fm);
+            for (int i = 0; i < colNum; i++) col[i].addFraction(fv[i]);
+            rowNum++;
+        }
 
-    FractionMatrix transpose();
+        else if (rowNum >= rowCapacity) cout << "Cannot have more row!" << endl;
+
+        else cout << "Invalid FractionVector!" << endl;
+    }
+
+    void addColumn(const FractionVector& fv)
+    {
+        if (rowNum == 0) rowNum = fv.size();
+        
+        if (colNum < colCapacity && fv.size() == rowNum)
+        {
+            colNum++;
+            for (int i = 0; i < rowNum; i++) row[i].addFraction(fv[i]);
+        }
+
+        else if (colNum >= colCapacity) cout << "Cannot have more column!" << endl;
+
+        else cout << "Invalid FractionVector!" << endl;
+    }
+
+    FractionVector getColumn(int idx)
+    {
+        setColumn();
+
+        if (idx < colNum) return col[idx];
+
+        else throw runtime_error("Index out of range!");
+    }
+
+    FractionVector& operator[](int idx) const
+    {
+        if (idx < rowNum) return row[idx];
+
+        else throw runtime_error("Index out of range!");
+    }
+
+    FractionMatrix operator+(const FractionMatrix& fm) const
+    {
+        if (rowNum == fm.rowNum && colNum == fm.colNum)
+        {
+            FractionMatrix newMatrix(rowNum, colNum);
+            for (int i = 0; i < rowNum; i++) newMatrix.addRow(row[i] + fm.row[i]);
+            return newMatrix;
+        }
+
+        else
+        {
+            cout << "These matrices are of different sizes" << endl;
+            return *this;
+        }
+    }
+
+    FractionMatrix operator-(const FractionMatrix& fm) const
+    {
+        if (rowNum == fm.rowNum && colNum == fm.colNum)
+        {
+            FractionMatrix newMatrix(rowNum, colNum);
+            for (int i = 0; i < rowNum; i++) newMatrix.addRow(row[i] - fm.row[i]);
+            return newMatrix;
+        }
+
+        else
+        {
+            cout << "These matrices are of different sizes" << endl;
+            return *this;
+        }
+    }
+
+    FractionMatrix operator*(FractionMatrix& fm) const // Matrix Multiplication
+    {
+        if (colNum == fm.rowNum)
+        {
+            FractionMatrix newMatrix(rowNum, fm.colNum);
+            FractionVector newRow = fm[0];
+
+            for (int i = 0; i < rowNum; i++)
+            {
+                for (int j = 0; j < fm.colNum; j++) newRow[j] = row[i] * fm.getColumn(j);
+
+                newMatrix.addRow(newRow);
+            }
+
+            return newMatrix;
+        }
+        else
+        {
+            cout << "These matrices are of different sizes" << endl;
+            return *this;
+        }
+    }
+
+    FractionMatrix operator*(const Fraction& f) const
+    {
+        FractionMatrix newMatrix = *this;
+        for (int i = 0; i < rowNum; i++) newMatrix[i] = newMatrix[i] * f;
+
+        return newMatrix;
+    }
+
+    FractionMatrix operator/(const Fraction& f) const
+    {
+        FractionMatrix newMatrix = *this;
+        for (int i = 0; i < rowNum; i++) newMatrix[i] = newMatrix[i] / f;
+
+        return newMatrix;
+    }
+
+    FractionMatrix operator%(const FractionMatrix& fm) const
+    {
+        if (rowNum == fm.rowNum && colNum == fm.colNum)
+        {
+            FractionMatrix newMatrix = *this;
+
+            for (int i = 0; i < rowNum; i++)
+            {
+                for (int j = 0; j < fm.colNum; j++) newMatrix[i][j] *= fm[i][j];
+            }
+            newMatrix.setColumn();
+
+            return newMatrix;
+        }
+        else
+        {
+            cout << "These matrices are of different sizes" << endl;
+            return *this;
+        }
+    }
+
+    FractionMatrix transpose()
+    {
+        setColumn();
+        return FractionMatrix(colCapacity, rowCapacity, colNum, col);
+    }
 
     // Friend Functions
     friend FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm);
 
     friend ostream& operator<<(ostream& os, const FractionMatrix& fm);
 
-    ~FractionMatrix();
+    ~FractionMatrix()
+    {
+        delete[] row;
+        delete[] col;
+        // cout << "FractionMatrix Deleted!" << endl;
+    }
 };
 
 
@@ -428,10 +633,23 @@ float operator/=(float& f1, const Fraction& f2)
 
 ostream& operator<<(ostream& os, const Fraction& f)
 {
+    string str = to_string(f.numerator);
+    if (f.denominator != 1)
+    {
+        str += '/';
+        str += to_string(f.denominator);
+    }
+    os << str;
+    return os;
+}
+/*
+ostream& operator<<(ostream& os, const Fraction& f)
+{
     os << f.numerator;
     if (f.denominator != 1) os << "/" << f.denominator;
     return os;
 }
+*/
 
 // FractionVector
 FractionVector operator*(const Fraction& f, const FractionVector& fv)
@@ -455,6 +673,27 @@ ostream& operator<<(ostream& os, const FractionVector& fv)
     return os;
 }
 
+
+// FractionMatrix
+FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm)
+{
+    return (fm * f);
+}
+
+ostream& operator<<(ostream& os, const FractionMatrix& fm)
+{
+    os << endl << "------------------------------------------" << endl;
+    for (int i = 0; i < fm.rowNum; i++)
+    {
+        for (int j = 0; j < fm.colNum; j++)
+        {
+            os << setw(11) << fm[i][j] << "  ";
+        }
+        os << endl;
+    }
+    os << "------------------------------------------" << endl;
+    return os;
+}
 
 
 int main()
@@ -534,7 +773,7 @@ int main()
     cout << "FractionVector Tests" << endl;
     cout << "==================================" << endl;
 
-    FractionVector fv1(3), fv2(3), fv3(2);
+    FractionVector fv1(3), fv2(3), fv3(2), fv4(2);
     fv1.addFraction(f1+f2);
     fv1.addFraction(f1-f2);
     fv1.addFraction(f1);
@@ -543,6 +782,8 @@ int main()
     fv2.addFraction(f2-f1);
     fv3.addFraction(f3);
     fv3.addFraction(f3*f2);
+    fv4.addFraction(f1);
+    fv4.addFraction(f1*f2);
 
     fv1.addFraction(f1);
     cout << endl;
@@ -550,6 +791,7 @@ int main()
     cout << "fv1 = " << fv1 << endl;
     cout << "fv2 = " << fv2 << endl;
     cout << "fv3 = " << fv3 << endl;
+    cout << "fv4 = " << fv4 << endl;
     cout << endl;
 
     cout << "Value of fv1 = " << fv1.value() << endl;
@@ -586,6 +828,85 @@ int main()
     {
         cerr << e.what() << endl;
     }
+    cout << endl;
 
     cout << "==================================" << endl << endl;
+
+
+    // FractionMatrix Test Cases
+    cout << "FractionVector Tests" << endl;
+    cout << "==================================" << endl;
+
+    FractionMatrix fm1(3, 3), fm2(3, 3), fm3(3, 2);
+    fm1.addRow(fv1);
+    fm1.addRow(fv1 + fv2);
+    fm1.addRow(fv1 - fv2);
+    fm2.addRow(fv2 - fv1);
+    fm2.addRow(fv2);
+    fm2.addRow(fv2 * f1);
+    fm3.addRow(fv4);
+    fm3.addRow(fv3);
+    fm3.addRow(fv4);
+
+    fm1.addRow(fv2);
+    cout << endl;
+
+    cout << "fm1:" << fm1 << endl;
+    cout << "fm2:" << fm2 << endl;
+    cout << "fm3:" << fm3 << endl;
+    cout << endl;
+
+    cout << "Access Element:" << endl;
+    cout << "fm1[1] = " << fm1[1] << endl;
+    cout << "fm2[0][2] = " << fm2[0][2] << endl;
+    cout << "fm3(col1) = " << fm3.getColumn(1) << endl;
+    cout << endl;
+
+    cout << "fm1 + fm2 = " << (fm1 + fm2) << endl;
+    cout << "fm1 - fm2 = " << (fm1 - fm2) << endl;
+    cout << endl;
+
+    cout << "fm1 * f1 = " << (fm1 * f1) << endl;
+    cout << "f1 * fm1 = " << (f1 * fm1) << endl;
+    cout << "fm1 / f1 = " << (fm1 / f1) << endl;
+    cout << endl;
+
+    cout << "Matrix Multiplication:" << endl;
+    cout << "fm2 * fm3 = " << fm2 * fm3 << endl;
+    cout << endl;
+
+    cout << "Hadamard Multiplication:" << endl;
+    cout << "fm1 % fm2 = " << fm1 % fm2 << endl;
+    cout << endl;
+
+    cout << "Transpose of fm3:" << fm3.transpose() << endl;
+    cout << endl;
+
+    cout << "Invalid Operation:" << endl;
+    fm1 + fm3;
+    fm2 - fm3;
+    fm3 * fm1;
+    fm3 % fm2;
+    try
+    {
+        fm1[4];
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << endl;
+    }
+    try
+    {
+        fm1.getColumn(4);
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << endl;
+    }
+    cout << endl;
+
+    cout << "==================================" << endl;
+
+
+    return 0;
 }
