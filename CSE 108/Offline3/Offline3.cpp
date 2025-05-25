@@ -245,13 +245,16 @@ public:
 
     FractionVector& operator=(const FractionVector& fv)
     {
-        if (fractions != NULL) delete[] fractions;
+        if (this != &fv)
+        {
+            if (fractions != NULL) delete[] fractions;
 
-        capacity = fv.capacity;
-        fractionCount = 0;
-        fractions = new Fraction[capacity];
+            capacity = fv.capacity;
+            fractionCount = 0;
+            fractions = new Fraction[capacity];
 
-        for (int i = 0; i < fv.fractionCount; i++) addFraction(fv.fractions[i]);
+            for (int i = 0; i < fv.fractionCount; i++) addFraction(fv.fractions[i]);
+        }
 
         return *this;
     }
@@ -266,6 +269,22 @@ public:
         if (fractionCount < capacity) fractions[fractionCount++] = f;
 
         else cout << "No more space for adding fraction!" << endl;
+    }
+
+    void removeFraction(int idx)
+    {
+        if (idx >= 0 && idx < fractionCount)
+        {
+            fractionCount--;
+            for (int i = idx; i < fractionCount; i++)
+            {
+                fractions[i] = fractions[i+1];
+            }
+        }
+
+        else if (fractionCount == 0) cout << "No fraction in list!" << endl;
+
+        else cout << "Invalid Index!" << endl;
     }
 
     Fraction& operator[](int idx) const
@@ -394,18 +413,23 @@ public:
 
     FractionMatrix operator=(const FractionMatrix& fm)
     {
-        if (row != NULL) delete[] row;
-        if (col != NULL) delete[] col;
+        if (this != &fm)
+        {
+            if (row != NULL) delete[] row;
+            if (col != NULL) delete[] col;
 
-        rowCapacity = fm.rowCapacity;
-        colCapacity = fm.colCapacity;
-        rowNum = fm.rowNum;
-        colNum = fm.colNum;
-        row = new FractionVector[rowCapacity];
-        col = new FractionVector[colCapacity];
+            rowCapacity = fm.rowCapacity;
+            colCapacity = fm.colCapacity;
+            rowNum = fm.rowNum;
+            colNum = fm.colNum;
+            row = new FractionVector[rowCapacity];
+            col = new FractionVector[colCapacity];
 
-        for (int i = 0; i < rowCapacity; i++) row[i] = fm.row[i];
-        for (int i = 0; i < colCapacity; i++) col[i] = fm.col[i];
+            for (int i = 0; i < rowCapacity; i++) row[i] = fm.row[i];
+            for (int i = 0; i < colCapacity; i++) col[i] = fm.col[i];
+        }
+
+        return *this;
     }
 
     void setColumn()
@@ -427,9 +451,9 @@ public:
         {
             row[rowNum] = fv;
             row[rowNum].setCapacity(colCapacity);
+            rowNum++;
 
             for (int i = 0; i < colNum; i++) col[i].addFraction(fv[i]);
-            rowNum++;
         }
 
         else if (rowNum >= rowCapacity) cout << "Cannot have more row!" << endl;
@@ -443,13 +467,56 @@ public:
         
         if (colNum < colCapacity && fv.size() == rowNum)
         {
+            col[colNum] = fv;
+            col[colNum].setCapacity(colCapacity);
             colNum++;
+
             for (int i = 0; i < rowNum; i++) row[i].addFraction(fv[i]);
         }
 
         else if (colNum >= colCapacity) cout << "Cannot have more column!" << endl;
 
         else cout << "Invalid FractionVector!" << endl;
+    }
+
+    void removeRow(int idx)
+    {
+        if (idx >= 0 && idx < rowNum)
+        {
+            rowNum--;
+            for (int i = idx; i < rowNum; i++)
+            {
+                row[i] = row[i+1];
+            }
+            for (int i = 0; i < colNum; i++)
+            {
+                col[i].removeFraction(idx);
+            }
+        }
+
+        else if (rowNum == 0) cout << "No row in matrix!" << endl;
+
+        else cout << "Invalid Index!" << endl;
+    }
+
+    void removeColumn(int idx)
+    {
+        if (idx >= 0 && idx < colNum)
+        {
+            colNum--;
+            for (int i = idx; i < colNum; i++)
+            {
+                col[i] = col[i+1];
+            }
+            for (int i = 0; i < rowNum; i++)
+            {
+                row[i].removeFraction(idx);
+            }
+        }
+
+        else if (colNum == 0) cout << "No column in matrix!" << endl;
+
+        else cout << "Invalid Index!" << endl;
     }
 
     FractionVector getColumn(int idx)
@@ -682,16 +749,16 @@ FractionMatrix operator*(const Fraction& f, const FractionMatrix& fm)
 
 ostream& operator<<(ostream& os, const FractionMatrix& fm)
 {
-    os << endl << "------------------------------------------" << endl;
+    os << endl;
     for (int i = 0; i < fm.rowNum; i++)
     {
+        os << "[";
         for (int j = 0; j < fm.colNum; j++)
         {
             os << setw(11) << fm[i][j] << "  ";
         }
-        os << endl;
+        os << "]" << endl;
     }
-    os << "------------------------------------------" << endl;
     return os;
 }
 
@@ -834,7 +901,7 @@ int main()
 
 
     // FractionMatrix Test Cases
-    cout << "FractionVector Tests" << endl;
+    cout << "FractionMatrix Tests" << endl;
     cout << "==================================" << endl;
 
     FractionMatrix fm1(3, 3), fm2(3, 3), fm3(3, 2);
