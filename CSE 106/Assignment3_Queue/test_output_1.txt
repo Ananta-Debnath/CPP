@@ -1,18 +1,18 @@
 Operation 1 (Arrival 101 1): randomQueue() called
-Q1: <101|
-Q2: <|
+Q1: <|
+Q2: <101|
 Q : <|
 Operation 2 (Arrival 102 2): 
-Q1: <101|
-Q2: <102|
+Q1: <102|
+Q2: <101|
 Q : <|
 Operation 3 (Arrival 103 3): 
-Q1: <101, 103|
-Q2: <102|
+Q1: <102|
+Q2: <101, 103|
 Q : <|
 Operation 4 (Leave 102 4): 
-Q1: <101, 103|
-Q2: <|
+Q1: <|
+Q2: <101, 103|
 Q : <|
 Operation 5 (Merge): 
 Q1: <|
@@ -47,8 +47,8 @@ Q1: <106|
 Q2: <105|
 Q : <|
 Operation 13 (Departure): randomQueue() called
-Q1: <|
-Q2: <105|
+Q1: <106|
+Q2: <|
 Q : <|
 Operation 14 (Departure): 
 Q1: <|

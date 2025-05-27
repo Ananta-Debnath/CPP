@@ -1,25 +1,35 @@
 #include <iostream>
 #include <vector>
-#include <random>
 #include "queue.h"
 using namespace std;
 
+/********************************* RANDOM ************************************/
+#define LCG_MULTIPLIER (1103515245)
+#define LCG_INCREMENT (12345)
+#define LCG_MODULUS ((unsigned)~0 >> 1)
+static unsigned int lcg_seed = 1;
+void custom_srand(unsigned int seed)
+{
+    lcg_seed = seed;
+}
+int custom_rand()
+{
+    lcg_seed = (LCG_MULTIPLIER * lcg_seed + LCG_INCREMENT) % (LCG_MODULUS + 1);
+    return lcg_seed;
+}
 int randomQueue(int seed = -1)
 {
-    static std::mt19937 rng;
-    static std::uniform_int_distribution<int> dist(1, 100);
     static bool initialized = false;
-
     if (seed != -1 && !initialized)
     {
-        rng.seed(seed);
+        custom_srand(seed);
         initialized = true;
         return -1;
     }
-
     cout << "randomQueue() called" << endl;
-    return (dist(rng) % 2) + 1;
+    return (custom_rand() % 2) + 1;
 }
+/*****************************************************************************/
 
 int main()
 {
