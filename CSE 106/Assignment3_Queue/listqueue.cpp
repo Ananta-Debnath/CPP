@@ -144,7 +144,6 @@ string ListQueue::toString() const
     }
     else
     {
-        
         str += to_string(front_node->data);
         for (Node* curr = front_node->next; curr != nullptr; curr = curr->next)
         {

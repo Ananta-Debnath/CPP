@@ -35,6 +35,9 @@ int main()
     cout << "Roll number after: " << std.getRoll() << endl;
 
 
+    cout << (-1) % 5 << endl;
+
+
 
     return 0;
 }
