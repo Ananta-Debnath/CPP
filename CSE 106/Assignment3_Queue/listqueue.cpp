@@ -138,18 +138,14 @@ string ListQueue::toString() const
     // TODO: Traverse the linked list from front
 
     string str = "<";
-    if (empty())
-    {
-        str += "|\n";
-    }
-    else
+    if (!empty())
     {
         str += to_string(front_node->data);
         for (Node* curr = front_node->next; curr != nullptr; curr = curr->next)
         {
             str += ", " + to_string(curr->data);
         }
-        str += "|\n";
     }
+    str += "|";
     return str;
 }

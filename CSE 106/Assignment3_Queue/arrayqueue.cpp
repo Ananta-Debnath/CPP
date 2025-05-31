@@ -51,7 +51,7 @@ int ArrayQueue::dequeue()
         int item = data[front_idx];
         front_idx = (front_idx + 1) % capacity;
 
-        if (capacity >= 4 * size() && capacity / 2 >= 10) resize(capacity / 2);
+        if (capacity >= 4 * size() && capacity / 2 >= 2) resize(capacity / 2);
         return item;
     }
 }
@@ -132,7 +132,7 @@ string ArrayQueue::toString() const
             str += ", " + to_string(data[(front_idx + i) % capacity]);
         }
     }
-    str += "|\n";
+    str += "|";
     return str;
 }
 

@@ -1,0 +1,7 @@
+Allrounder Marcus_Stoinis 34 90 1800 1450 60 1600 250.0
+Bowler Mustafizur_Rahman 29 110 170 2400 780.3
+Allrounder Ben_Stokes 33 180 5000 4000 250 5200 800.0
+Allrounder Shakib_Al_Hasan 36 250 7000 9000 350 6000 1000.0
+Batsman Virat_Kohli 35 290 13000 11500
+Allrounder Cameron_Green 25 50 1200 1000 45 900 160.2
+Bowler Jasprit_Bumrah 30 100 200 2500 800.0

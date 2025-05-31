@@ -1,0 +1,61 @@
+=== Player 1 ===
+---- Allrounder Info ----
+Name: Marcus_Stoinis, Age: 34, Matches Played: 90
+---- Batting Stats ----
+Runs Scored: 1800, Balls Faced: 1450
+Batting Average: 20.00, Strike Rate: 124.14
+---- Bowling Stats ----
+Wickets Taken: 60, Runs Conceded: 1600, Overs Bowled: 250.00
+Wicket Average: 0.67, Economy: 6.40
+
+=== Player 2 ===
+---- Bowler Info ----
+Name: Mustafizur_Rahman, Age: 29, Matches Played: 110
+---- Bowling Stats ----
+Wickets Taken: 170, Runs Conceded: 2400, Overs Bowled: 780.30
+Wicket Average: 1.55, Economy: 3.08
+
+=== Player 3 ===
+---- Allrounder Info ----
+Name: Ben_Stokes, Age: 33, Matches Played: 180
+---- Batting Stats ----
+Runs Scored: 5000, Balls Faced: 4000
+Batting Average: 27.78, Strike Rate: 125.00
+---- Bowling Stats ----
+Wickets Taken: 250, Runs Conceded: 5200, Overs Bowled: 800.00
+Wicket Average: 1.39, Economy: 6.50
+
+=== Player 4 ===
+---- Allrounder Info ----
+Name: Shakib_Al_Hasan, Age: 36, Matches Played: 250
+---- Batting Stats ----
+Runs Scored: 7000, Balls Faced: 9000
+Batting Average: 28.00, Strike Rate: 77.78
+---- Bowling Stats ----
+Wickets Taken: 350, Runs Conceded: 6000, Overs Bowled: 1000.00
+Wicket Average: 1.40, Economy: 6.00
+
+=== Player 5 ===
+---- Batsman Info ----
+Name: Virat_Kohli, Age: 35, Matches Played: 290
+---- Batting Stats ----
+Runs Scored: 13000, Balls Faced: 11500
+Batting Average: 44.83, Strike Rate: 113.04
+
+=== Player 6 ===
+---- Allrounder Info ----
+Name: Cameron_Green, Age: 25, Matches Played: 50
+---- Batting Stats ----
+Runs Scored: 1200, Balls Faced: 1000
+Batting Average: 24.00, Strike Rate: 120.00
+---- Bowling Stats ----
+Wickets Taken: 45, Runs Conceded: 900, Overs Bowled: 160.20
+Wicket Average: 0.90, Economy: 5.62
+
+=== Player 7 ===
+---- Bowler Info ----
+Name: Jasprit_Bumrah, Age: 30, Matches Played: 100
+---- Bowling Stats ----
+Wickets Taken: 200, Runs Conceded: 2500, Overs Bowled: 800.00
+Wicket Average: 2.00, Economy: 3.12
+
