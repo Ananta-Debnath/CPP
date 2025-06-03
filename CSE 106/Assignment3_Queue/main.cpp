@@ -33,14 +33,13 @@ int randomQueue(int seed = -1)
 
 int main()
 {
-    freopen("test_input_2.txt", "r", stdin); // Test Case 1
+    freopen("test_input_1.txt", "r", stdin); // Test Case 1
     // freopen("test_input_2.txt", "r", stdin); // Test Case 2
     freopen("output.txt", "w", stdout);
     // Initialize the random generator with a fixed seed
     // You should set the seed only once at the beginning of your program
     // NOTE: Do not modify the following lines.
     randomQueue(42);
-    // randomQueue();
 
     Queue *Q1 = new ListQueue();
     Queue *Q2 = new ListQueue();
@@ -50,10 +49,10 @@ int main()
     cin >> N;
 
     Queue* merged = new ListQueue();
-    Queue* queue[] = {Q, Q1, Q2, merged};
+    Queue* queue[] = {Q1, Q2, Q, merged};
     int op;
-    int id, ts, l, item;
-    int flag = 1; // 0 -> Q(Merged); 1 -> Q1; 2 -> Q2;
+    int id, ts, l; // ts -> timestamp
+    int flag = 0; // 0 -> Q1 ; 1 -> Q2 ; 2 -> Q(Merged);
 
     for (int i = 1; i <= N; i++)
     {
@@ -67,11 +66,14 @@ int main()
                 cin >> id >> ts;
                 cout << "(Arrival " << id << " " << ts << "): " << endl;
 
-                if (flag != 0 && Q1->empty() && Q2->empty()) flag = randomQueue();
+                if (flag != 2 && Q1->empty() && Q2->empty()) flag = randomQueue() - 1;
 
                 queue[flag]->enqueue(id);
-                if (flag > 0) merged->enqueue(id);
-                flag = (flag * 2) % 3; // 1 <--> 2 ; 0 <--> 0
+                if (flag < 2)
+                {
+                    merged->enqueue(id);
+                    flag = (flag + 1) % 2; // 0 <--> 1
+                }
 
                 break;
 
@@ -79,7 +81,7 @@ int main()
                 cin >> id >> ts;
                 cout << "(Leave " << id << " " << ts << "): " << endl;
 
-                if (merged->back() == id) flag = (flag * 2) % 3; // last patient will be removed
+                if (flag != 2 && !merged->empty() && merged->back() == id) flag = (flag + 1) % 2; // last patient will be removed
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -96,30 +98,30 @@ int main()
             case 3:
                 cout << "(Merge): " << endl;
 
-                if (flag == 0) cout << "Already merged!" << endl;
+                if (flag == 2) cout << "Already merged!" << endl;
 
                 else
                 {
                     while (!merged->empty()) Q->enqueue(merged->dequeue());
                     Q1->clear();
                     Q2->clear();
-                    flag = 0;
+                    flag = 2; // -> merged
                 }
                 break;
 
             case 4:
                 cout << "(Split): " << endl;
 
-                if (flag != 0) cout << "Queue not merged!" << endl;
+                if (flag != 2) cout << "Queue not merged!" << endl;
 
                 else
                 {
-                    flag = 1;
+                    flag = 0;
                     while (!Q->empty())
                     {
                         merged->enqueue(Q->front());
                         queue[flag]->enqueue(Q->dequeue());
-                        flag = (flag * 2) % 3; // 1 <--> 2
+                        flag = (flag + 1) % 2; // 0 <--> 1
                     }
                 }
                 break;
@@ -127,21 +129,19 @@ int main()
             case 5:
                 cout << "(Departure): " << endl;
 
-                if (flag == 0) id = Q->front();
-                
-                else if (Q1->empty() && Q2->empty()) id = -1;
+                if (flag == 2) id = Q->front();
 
-                else if (Q1->empty()) id = Q2->front();
+                else if (Q1->empty()) id = Q2->front(); // if both empty -> id = -1
 
                 else if (Q2->empty()) id = Q1->front();
 
-                else id = queue[randomQueue()]->front();
+                else id = queue[randomQueue() - 1]->front();
 
 
                 if (id >= 0)
                 {
-                    if (merged->back() == id) flag = (flag * 2) % 3; // last patient will be removed
-                    
+                    if (flag != 2 && !merged->empty() && merged->back() == id) flag = (flag + 1) % 2; // last patient will be removed
+
                     for (int i = 0; i < 4; i++)
                     {
                         l = queue[i]->size();
