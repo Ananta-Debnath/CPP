@@ -7,6 +7,12 @@ ArrayQueue::ArrayQueue(int initial_capacity)
     // TODO: Initialize data members (data, capacity, front_idx, rear_idx)
     // TODO: Allocate memory for the array with the specified initial capacity
 
+    if (initial_capacity < 2)
+    {
+        cout << "Capacity is less than 2" << endl;
+        cout << "Capacity is changed to 2" << endl;
+        initial_capacity = 2;
+    }
     front_idx = rear_idx = 0;
     capacity = initial_capacity;
     data = new int[capacity];
@@ -17,7 +23,7 @@ ArrayQueue::~ArrayQueue()
 {
     // TODO: Free the dynamically allocated memory for the array
 
-    free(data);
+    delete[] data;
 }
 
 // Enqueue implementation (add an item to the rear of the queue)
@@ -62,7 +68,7 @@ void ArrayQueue::clear()
     // TODO: Reset the queue to be empty (reset capacity, front_idx, rear_idx, data)
 
     front_idx = rear_idx = 0;
-    resize(10);
+    resize(2);
 }
 
 // Size implementation
@@ -152,7 +158,7 @@ void ArrayQueue::resize(int new_capacity)
         newData[i] = data[(front_idx + i) % capacity];
     }
     
-    delete data;
+    delete[] data;
     capacity = new_capacity;
     data = newData;
     front_idx = 0;

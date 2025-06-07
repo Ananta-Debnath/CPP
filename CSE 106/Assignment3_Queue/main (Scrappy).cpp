@@ -48,7 +48,6 @@ int main()
     int N;
     cin >> N;
     
-    // Queue* queue[] = {Q, Q1, Q2};
     Queue* order = new ListQueue();
     int op;
     bool merged = false;
