@@ -33,8 +33,8 @@ int randomQueue(int seed = -1)
 
 int main()
 {
-    // freopen("test_input_1.txt", "r", stdin); // Test Case 1
-    freopen("test_input_2.txt", "r", stdin); // Test Case 2
+    freopen("test_input_1.txt", "r", stdin); // Test Case 1
+    // freopen("test_input_2.txt", "r", stdin); // Test Case 2
     freopen("output.txt", "w", stdout);
     // Initialize the random generator with a fixed seed
     // You should set the seed only once at the beginning of your program
@@ -130,33 +130,36 @@ int main()
 
             case 5:
                 cout << "(Departure): " << endl;
+                id = -1;
 
-                if (activeQueue == 2) id = Q->front();
+                if (activeQueue == 2 && !Q->empty()) id = Q->dequeue();
 
-                else if (Q1->empty()) id = Q2->front(); // if both empty -> id = -1
+                else if (merged->empty()) id = -1; // both empty
 
-                else if (Q2->empty()) id = Q1->front();
+                else if (Q1->empty()) id = Q2->dequeue();
 
-                else id = queue[randomQueue() - 1]->front();
+                else if (Q2->empty()) id = Q1->dequeue();
+
+                else id = queue[randomQueue() - 1]->dequeue();
 
 
-                if (id >= 0) // if all empty -> id = -1;
+                if (id == -1) cout << "All queues are empty!" << endl;
+
+                else if (!merged->empty() && merged->front() == id) merged->dequeue();
+
+                else
                 {
                     if (activeQueue != 2 && !merged->empty() && merged->back() == id) activeQueue = (activeQueue + 1) % 2;
                     // last patient will be removed
 
-                    for (int i = 0; i < 4; i++)
+                    l = merged->size();
+                    while (l--)
                     {
-                        l = queue[i]->size();
-                        while (l--)
-                        {
-                            if (queue[i]->front() == id) queue[i]->dequeue();
+                        if (merged->front() == id) merged->dequeue();
 
-                            else queue[i]->enqueue(queue[i]->dequeue());
-                        }
+                        else merged->enqueue(merged->dequeue());
                     }
                 }
-                else cout << "All queues are empty!" << endl;
 
                 break;
 
