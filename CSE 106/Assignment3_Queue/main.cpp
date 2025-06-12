@@ -47,12 +47,11 @@ int main()
 
     int N;
     cin >> N;
-
-    Queue* merged = new ListQueue(); // stores the id in ascending order of timestamp
-    Queue* queue[] = {Q1, Q2, Q, merged};
+    
     int op;
-    int id, ts, l; // ts -> timestamp
-    int activeQueue = 0; // 0 -> Q1 ; 1 -> Q2 ; 2 -> Q(Merged);
+    bool merged = false;
+    int id, l;
+    int* ts = new int[10001]; // ts -> timestamp
 
     for (int i = 1; i <= N; i++)
     {
@@ -63,36 +62,63 @@ int main()
         switch (op)
         {
             case 1:
-                cin >> id >> ts;
-                cout << "(Arrival " << id << " " << ts << "): " << endl;
-
-                if (activeQueue != 2 && Q1->empty() && Q2->empty()) activeQueue = randomQueue() - 1;
-                // merged->empty() ---> Q1->empty() && Q2->empty()
-
-                queue[activeQueue]->enqueue(id);
-                if (activeQueue < 2)
+                cin >> id;
+                cin >> ts[id];
+                cout << "(Arrival " << id << " " << ts[id] << "): " << endl;
+                
+                if (merged)
                 {
-                    merged->enqueue(id);
-                    activeQueue = (activeQueue + 1) % 2; // 0 <--> 1
+                    Q->enqueue(id);
                 }
+                else if (Q1->empty() && Q2->empty())
+                {
+                    if (randomQueue() == 1) Q1->enqueue(id);
 
+                    else Q2->enqueue(id);
+                }
+                else if (Q1->empty()) Q1->enqueue(id);
+
+                else if (Q2->empty()) Q2->enqueue(id);
+
+                else
+                {
+                    if (ts[Q1->back()] < ts[Q2->back()]) Q1->enqueue(id);
+
+                    else Q2->enqueue(id);
+                }
                 break;
 
             case 2:
-                cin >> id >> ts;
-                cout << "(Leave " << id << " " << ts << "): " << endl;
+                cin >> id;
+                cin >> ts[id];
+                cout << "(Leave " << id << " " << ts[id] << "): " << endl;
 
-                if (activeQueue != 2 && !merged->empty() && merged->back() == id) activeQueue = (activeQueue + 1) % 2;
-                // last patient will be removed
-
-                for (int i = 0; i < 4; i++)
+                if (merged)
                 {
-                    l = queue[i]->size();
+                    l = Q->size();
                     while (l--)
                     {
-                        if (queue[i]->front() == id) queue[i]->dequeue();
+                        if (Q->front() == id) Q->dequeue();
 
-                        else queue[i]->enqueue(queue[i]->dequeue());
+                        else Q->enqueue(Q->dequeue());
+                    }
+                }
+                else
+                {
+                    l = Q1->size();
+                    while (l--)
+                    {
+                        if (Q1->front() == id) Q1->dequeue();
+
+                        else Q1->enqueue(Q1->dequeue());
+                    }
+
+                    l = Q2->size();
+                    while (l--)
+                    {
+                        if (Q2->front() == id) Q2->dequeue();
+
+                        else Q2->enqueue(Q2->dequeue());
                     }
                 }
                 break;
@@ -100,72 +126,54 @@ int main()
             case 3:
                 cout << "(Merge): " << endl;
 
-                if (activeQueue == 2) cout << "Already merged!" << endl;
+                if (merged) cout << "Already merged!" << endl;
 
                 else
                 {
-                    while (!merged->empty()) Q->enqueue(merged->dequeue());
-                    Q1->clear();
-                    Q2->clear();
-                    activeQueue = 2; // -> merged
+                    merged = true;
+                    while (!Q1->empty() && !Q2->empty())
+                    {
+                        if (ts[Q1->front()] < ts[Q2->front()]) Q->enqueue(Q1->dequeue());
+
+                        else Q->enqueue(Q2->dequeue());
+                    }
+
+                    while (!Q1->empty()) Q->enqueue(Q1->dequeue());
+
+                    while (!Q2->empty()) Q->enqueue(Q2->dequeue());
                 }
                 break;
 
             case 4:
                 cout << "(Split): " << endl;
 
-                if (activeQueue != 2) cout << "Queue not merged!" << endl;
+                if (!merged) cout << "Queue not merged!" << endl;
 
                 else
                 {
-                    activeQueue = 0;
+                    merged = false;
                     while (!Q->empty())
                     {
-                        merged->enqueue(Q->front());
-                        queue[activeQueue]->enqueue(Q->dequeue());
-                        activeQueue = (activeQueue + 1) % 2; // 0 <--> 1
+                        Q1->enqueue(Q->dequeue());
+                        if (!Q->empty()) Q2->enqueue(Q->dequeue());
                     }
                 }
                 break;
 
             case 5:
                 cout << "(Departure): " << endl;
-                id = -1;
 
-                if (activeQueue == 2 && !Q->empty()) id = Q->dequeue();
+                if (merged) Q->dequeue();
 
-                else if (merged->empty()) id = -1; // both empty
+                else if (Q1->empty() && Q2->empty()) cout << "Both queues are empty!" << endl;
 
-                else if (Q1->empty()) id = Q2->dequeue();
+                else if (Q1->empty()) Q2->dequeue();
 
-                else if (Q2->empty()) id = Q1->dequeue();
+                else if (Q2->empty()) Q1->dequeue();
 
-                else id = queue[randomQueue() - 1]->dequeue();
+                else if (randomQueue() == 1) Q1->dequeue();
 
-
-                if (id == -1) cout << "All queues are empty!" << endl;
-
-                else if (!merged->empty() && merged->front() == id) merged->dequeue();
-
-                else
-                {
-                    if (activeQueue != 2 && !merged->empty() && merged->back() == id) activeQueue = (activeQueue + 1) % 2;
-                    // last patient will be removed
-
-                    l = merged->size();
-                    while (l--)
-                    {
-                        if (merged->front() == id) merged->dequeue();
-
-                        else merged->enqueue(merged->dequeue());
-                    }
-                }
-
-                break;
-
-            default:
-                cout << "Invalid Operation!" << endl;
-                break;
+                else Q2->dequeue();
         }
 
 
@@ -186,7 +194,10 @@ int main()
         }
     }
 
-    for (int i = 0; i < 4; i++) delete queue[i];
+    delete Q1;
+    delete Q2;
+    delete Q;
+    delete ts;
 
     return 0;
 }
