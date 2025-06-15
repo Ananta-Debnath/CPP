@@ -1,5 +1,4 @@
-Operation 1 (Arrival 101 1): 
-randomQueue() called
+Operation 1 (Arrival 101 1): randomQueue() called
 Q1: <|
 Q2: <101|
 Q : <|
@@ -43,13 +42,11 @@ Operation 11 (Arrival 106 9):
 Q1: <104, 106|
 Q2: <105|
 Q : <|
-Operation 12 (Departure): 
-randomQueue() called
+Operation 12 (Departure): randomQueue() called
 Q1: <106|
 Q2: <105|
 Q : <|
-Operation 13 (Departure): 
-randomQueue() called
+Operation 13 (Departure): randomQueue() called
 Q1: <106|
 Q2: <|
 Q : <|
