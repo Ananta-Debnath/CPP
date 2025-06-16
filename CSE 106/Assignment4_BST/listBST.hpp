@@ -42,6 +42,38 @@ private:
         else return getNode(root->right, key);
     }
 
+    void defaultPrint(Node* root) const
+    {
+        std::cout << "(";
+        if (root != nullptr)
+        {
+            std::cout << root->key << ":" << root->value;
+
+            if (root->left || root->right)
+            {
+                std::cout << " ";
+                defaultPrint(root->left);
+            }
+
+            if (root->right)
+            {
+                std::cout << " ";
+                defaultPrint(root->right);
+            }
+        }
+        std::cout << ")";
+    }
+
+    void preOrderPrint(Node* root) const
+    {
+        if (root != nullptr)
+        {
+            std::cout << "(" << root->key << ":" << root->value << ") ";
+            preOrderPrint(root->left);
+            preOrderPrint(root->right);
+        }
+    }
+
     void inOrderPrint(Node* root) const
     {
         if (root != nullptr)
@@ -49,6 +81,16 @@ private:
             inOrderPrint(root->left);
             std::cout << "(" << root->key << ":" << root->value << ") ";
             inOrderPrint(root->right);
+        }
+    }
+
+    void postOrderPrint(Node* root) const
+    {
+        if (root != nullptr)
+        {
+            postOrderPrint(root->left);
+            postOrderPrint(root->right);
+            std::cout << "(" << root->key << ":" << root->value << ") ";
         }
     }
 
@@ -91,13 +133,11 @@ private:
             }
             else // Both children
             {
-                // Find in-order successor (kinda)
                 temp = root->right;
-                // while (!temp->left && temp->right) temp = temp->right;
-                // if (temp->left == nullptr) temp = root->right;
 
                 if (temp->left)
                 {
+                    // Find in-order successor (kinda)
                     while (temp->left->left) temp = temp->left;
                     root->key = temp->left->key;
                     root->value = temp->left->value;
@@ -301,18 +341,31 @@ public:
      */
     void print(char traversal_type = 'D') const override {
         // TODO: Implement print logic
-        if (traversal_type == 'I' || traversal_type == 'i')
+        if (traversal_type == 'D' || traversal_type == 'd')
+        {
+            std::cout << "BST (Default): ";
+            defaultPrint(root);
+            std::cout << std::endl;
+        }
+        else if (traversal_type == 'I' || traversal_type == 'i')
         {
             std::cout << "BST (In-order): ";
             inOrderPrint(root);
             std::cout << std::endl;
         }
-        else
+        else if (traversal_type == 'P' || traversal_type == 'p')
         {
-            std::cout << "BST (In-order): ";
-            inOrderPrint(root);
+            std::cout << "BST (Pre-order): ";
+            preOrderPrint(root);
             std::cout << std::endl;
         }
+        else if (traversal_type == 'O' || traversal_type == 'o')
+        {
+            std::cout << "BST (Post-order): ";
+            postOrderPrint(root);
+            std::cout << std::endl;
+        }
+        else throw std::runtime_error("Invalid traversal type");
     }
     
 };

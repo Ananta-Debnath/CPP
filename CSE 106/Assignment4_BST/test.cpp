@@ -118,4 +118,10 @@ int main()
     cout << "Max: " << bst->find_max() << endl;
     cout << "Min: " << bst->find_min() << endl;
     cout << endl;
+
+    bst->print('D');
+    bst->print('i');
+    bst->print('p');
+    bst->print('O');
+    cout << endl;
 }
