@@ -34,3 +34,12 @@ int main(int argc, char **argv) {
     delete bst;
     return 0;
 }
+
+/*
+std::cout << "Insertion failed! Key " << key << " already exists in BST, ";
+this->print('I');
+
+std::cout << "Key " << key << " inserted into BST, ";
+this->print('I');
+
+*/
