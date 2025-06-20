@@ -234,7 +234,7 @@ public:
             return true;
         }
     }
-    
+
     /**
      * Find if a key exists in the BST
      */
@@ -341,7 +341,10 @@ public:
      */
     void print(char traversal_type = 'D') const override {
         // TODO: Implement print logic
-        if (traversal_type == 'D' || traversal_type == 'd')
+
+        if (empty()) std::cout << "The BST is empty" << std::endl;
+
+        else if (traversal_type == 'D' || traversal_type == 'd')
         {
             std::cout << "BST (Default): ";
             defaultPrint(root);

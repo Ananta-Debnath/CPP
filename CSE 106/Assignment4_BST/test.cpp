@@ -32,7 +32,7 @@ int main()
     cout << "Min: " << bst->find_min() << endl;
     cout << endl;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
     {
         key = randkey();
         if (bst->find(key)) cout << key << " found" << endl;
@@ -41,7 +41,7 @@ int main()
     cout << endl;
 
     cout << "Key - Value" << endl;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
     {
         try
         {
@@ -58,7 +58,7 @@ int main()
     cout << endl;
 
     cout << "Updating value through key" << endl;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
     {
         try
         {

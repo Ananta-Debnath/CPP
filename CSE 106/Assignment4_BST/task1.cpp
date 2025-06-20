@@ -6,7 +6,7 @@ using namespace std;
 
 /*
 g++ -std=c++11 task1.cpp -o task1
-./task1 in_task1.txt > task1.txt
+./task1 in_task1.txt > myout_task1.txt
 */
 
 int main(int argc, char **argv) {
@@ -33,32 +33,30 @@ int main(int argc, char **argv) {
 
         // Start your code here
 
-        int key;
-        string in;
         if (c == 'I')
         {
-            in_file >> key;
-            if (bst->insert(key, key)) cout << "Key " << key << " inserted into BST, ";
+            in_file >> val;
+            if (bst->insert(val, val)) cout << "Key " << val << " inserted into BST, ";
 
-            else cout << "Insertion failed! Key " << key << " already exists in BST, ";
+            else cout << "Insertion failed! Key " << val << " already exists in BST, ";
 
             bst->print();
         }
         else if (c == 'D')
         {
-            in_file >> key;
-            if (bst->remove(key)) cout << "Key " << key << " removed from BST, ";
+            in_file >> val;
+            if (bst->remove(val)) cout << "Key " << val << " removed from BST, ";
 
-            else cout << "Removal failed! Key " << key << " not found in BST, ";
+            else cout << "Removal failed! Key " << val << " not found in BST, ";
 
             bst->print();
         }
         else if (c == 'F')
         {
-            in_file >> key;
-            if (bst->find(key)) cout << "Key " << key << " found in BST." << endl;
+            in_file >> val;
+            if (bst->find(val)) cout << "Key " << val << " found in BST." << endl;
 
-            else cout << "Key " << key << " not found in BST." << endl;
+            else cout << "Key " << val << " not found in BST." << endl;
         }
         else if (c == 'E')
         {
@@ -77,29 +75,54 @@ int main(int argc, char **argv) {
         }
         else if (c == 'M')
         {
-            in_file >> in;
-            if (in == "Max") cout << "Maximum value: " << bst->find_max() << endl;
+            in_file >> str;
+            int num;
+            if (str[0] == 'M' && str[1] == 'a')
+            {
+                try
+                {
+                    num = bst->find_max();
+                    cout << "Maximum value: " << num << endl;
+                }
+                catch(const exception& e)
+                {
+                    cerr << e.what() << '\n';
+                }
+                
+            }
 
-            else if (in == "Min") cout << "Minimum value: " << bst->find_min() << endl;
+            else if (str[0] == 'M' && str[1] == 'i')
+            {
+                try
+                {
+                    num = bst->find_min();
+                    cout << "Minimum value: " << num << endl;
+                }
+                catch(const exception& e)
+                {
+                    cerr << e.what() << '\n';
+                }
+                
+            }
 
-            else throw runtime_error("Input " + in + " is unknown");
+            else throw runtime_error("Input is unknown");
         }
         else if (c == 'T')
         {
-            in_file >> in;
-            if (in == "Default") bst->print('D');
+            in_file >> str;
+            if (str[0] == 'D' && str[1] == 'e') bst->print('D');
             
-            else if (in == "In") bst->print('I');
+            else if (str[0] == 'I' && str[1] == 'n') bst->print('I');
             
-            else if (in == "Pre") bst->print('P');
+            else if (str[0] == 'P' && str[1] == 'r') bst->print('P');
             
-            else if (in == "Post") bst->print('O');
+            else if (str[0] == 'P' && str[1] == 'o') bst->print('O');
 
-            else throw runtime_error("Input " + in + " is unknown");
+            else throw runtime_error("Input is unknown");
         }
         else
         {
-            throw runtime_error("Input " + to_string(c) + " is unknown");
+            throw runtime_error("Input is unknown");
         }
 
         // End your code here

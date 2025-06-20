@@ -6,7 +6,7 @@ using namespace std;
 
 /*
 g++ -std=c++11 task2.cpp -o task2
-./task2 in_task2.txt > task2.txt
+./task2 in_task2.txt > myout_task2.txt
 */
 
 int main(int argc, char **argv) {
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
             cout << "Phil wins!" << endl;
             break;
         }
-        else if (bst1->empty())
+        else if (bst2->empty())
         {
             cout << "Claire wins!" << endl;
             break;
