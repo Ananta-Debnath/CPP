@@ -1,0 +1,569 @@
+1 - Constructed
+1 - Constructed
+1 - Assigned
+2 - Constructed
+2 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+1 - Assigned
+0 - Assigned
+2 - Assigned
+1 - Constructed
+2 - Constructed
+1 - Constructed
+1 - Copied
+1 - Constructed
+2 - Constructed
+Added Node
+1 - Constructed
+3 - Constructed
+3 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+1 - Assigned
+2 - Assigned
+0 - Assigned
+3 - Assigned
+1 - Constructed
+3 - Constructed
+1 - Constructed
+1 - Copied
+1 - Constructed
+3 - Constructed
+Added Node
+1 - Constructed
+4 - Constructed
+4 - Constructed
+4 - Assigned
+1 - Constructed
+4 - Constructed
+1 - Constructed
+1 - Copied
+1 - Constructed
+4 - Constructed
+Added Node
+1 - Constructed
+5 - Constructed
+5 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+1 - Assigned
+2 - Assigned
+3 - Assigned
+4 - Assigned
+0 - Assigned
+5 - Assigned
+1 - Constructed
+5 - Constructed
+1 - Constructed
+1 - Copied
+1 - Constructed
+5 - Constructed
+Added Node
+2 - Constructed
+6 - Constructed
+6 - Constructed
+6 - Assigned
+2 - Constructed
+6 - Constructed
+2 - Constructed
+2 - Copied
+2 - Constructed
+6 - Constructed
+Added Node
+2 - Constructed
+7 - Constructed
+7 - Constructed
+7 - Assigned
+2 - Constructed
+7 - Constructed
+2 - Constructed
+2 - Copied
+2 - Constructed
+7 - Constructed
+Added Node
+2 - Constructed
+8 - Constructed
+8 - Constructed
+8 - Assigned
+2 - Constructed
+8 - Constructed
+2 - Constructed
+2 - Copied
+2 - Constructed
+8 - Constructed
+Added Node
+3 - Constructed
+9 - Constructed
+9 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+0 - Constructed
+1 - Assigned
+2 - Assigned
+3 - Assigned
+4 - Assigned
+5 - Assigned
+6 - Assigned
+7 - Assigned
+8 - Assigned
+0 - Assigned
+9 - Assigned
+3 - Constructed
+9 - Constructed
+3 - Constructed
+3 - Copied
+3 - Constructed
+9 - Constructed
+Added Node
+3 - Constructed
+10 - Constructed
+10 - Constructed
+10 - Assigned
+3 - Constructed
+10 - Constructed
+3 - Constructed
+3 - Copied
+3 - Constructed
+10 - Constructed
+Added Node
+3 - Constructed
+11 - Constructed
+11 - Constructed
+11 - Assigned
+3 - Constructed
+11 - Constructed
+3 - Constructed
+3 - Copied
+3 - Constructed
+11 - Constructed
+Added Node
+4 - Constructed
+12 - Constructed
+12 - Constructed
+12 - Assigned
+4 - Constructed
+12 - Constructed
+4 - Constructed
+4 - Copied
+4 - Constructed
+12 - Constructed
+Added Node
+4 - Constructed
+13 - Constructed
+13 - Constructed
+13 - Assigned
+4 - Constructed
+13 - Constructed
+4 - Constructed
+4 - Copied
+4 - Constructed
+13 - Constructed
+Added Node
+4 - Constructed
+14 - Constructed
+14 - Constructed
+14 - Assigned
+4 - Constructed
+14 - Constructed
+4 - Constructed
+4 - Copied
+4 - Constructed
+14 - Constructed
+Added Node
+5 - Constructed
+15 - Constructed
+15 - Constructed
+15 - Assigned
+5 - Constructed
+15 - Constructed
+5 - Constructed
+5 - Copied
+5 - Constructed
+15 - Constructed
+Added Node
+5 - Constructed
+6 - Constructed
+5 - Constructed
+6 - Constructed
+5 - Constructed
+5 - Copied
+5 - Constructed
+6 - Constructed
+Added Node
+6 - Constructed
+7 - Constructed
+6 - Constructed
+7 - Constructed
+6 - Constructed
+6 - Copied
+6 - Constructed
+7 - Constructed
+Added Node
+7 - Constructed
+8 - Constructed
+7 - Constructed
+8 - Constructed
+7 - Constructed
+7 - Copied
+7 - Constructed
+8 - Constructed
+Added Node
+8 - Constructed
+9 - Constructed
+8 - Constructed
+9 - Constructed
+8 - Constructed
+8 - Copied
+8 - Constructed
+9 - Constructed
+Added Node
+9 - Constructed
+10 - Constructed
+9 - Constructed
+10 - Constructed
+9 - Constructed
+9 - Copied
+9 - Constructed
+10 - Constructed
+Added Node
+10 - Constructed
+11 - Constructed
+10 - Constructed
+11 - Constructed
+10 - Constructed
+10 - Copied
+10 - Constructed
+11 - Constructed
+Added Node
+11 - Constructed
+12 - Constructed
+11 - Constructed
+12 - Constructed
+11 - Constructed
+11 - Copied
+11 - Constructed
+12 - Constructed
+Added Node
+12 - Constructed
+13 - Constructed
+12 - Constructed
+13 - Constructed
+12 - Constructed
+12 - Copied
+12 - Constructed
+13 - Constructed
+Added Node
+13 - Constructed
+14 - Constructed
+13 - Constructed
+14 - Constructed
+13 - Constructed
+13 - Copied
+13 - Constructed
+14 - Constructed
+Added Node
+14 - Constructed
+15 - Constructed
+14 - Constructed
+15 - Constructed
+14 - Constructed
+14 - Copied
+14 - Constructed
+15 - Constructed
+Added Node
+15 - Constructed
+1 - Constructed
+15 - Constructed
+1 - Constructed
+15 - Constructed
+15 - Copied
+15 - Constructed
+1 - Constructed
+Added Node
+1 - Constructed
+6 - Constructed
+1 - Constructed
+6 - Constructed
+1 - Constructed
+1 - Copied
+1 - Constructed
+6 - Constructed
+Added Node
+2 - Constructed
+9 - Constructed
+2 - Constructed
+9 - Constructed
+2 - Constructed
+2 - Copied
+2 - Constructed
+9 - Constructed
+Added Node
+3 - Constructed
+12 - Constructed
+3 - Constructed
+12 - Constructed
+3 - Constructed
+3 - Copied
+3 - Constructed
+12 - Constructed
+Added Node
+4 - Constructed
+15 - Constructed
+4 - Constructed
+15 - Constructed
+4 - Constructed
+4 - Copied
+4 - Constructed
+15 - Constructed
+Added Node
+5 - Constructed
+10 - Constructed
+5 - Constructed
+10 - Constructed
+5 - Constructed
+5 - Copied
+5 - Constructed
+10 - Constructed
+Added Node
+6 - Constructed
+11 - Constructed
+6 - Constructed
+11 - Constructed
+6 - Constructed
+6 - Copied
+6 - Constructed
+11 - Constructed
+Added Node
+7 - Constructed
+12 - Constructed
+7 - Constructed
+12 - Constructed
+7 - Constructed
+7 - Copied
+7 - Constructed
+12 - Constructed
+Added Node
+8 - Constructed
+13 - Constructed
+8 - Constructed
+13 - Constructed
+8 - Constructed
+8 - Copied
+8 - Constructed
+13 - Constructed
+Added Node
+9 - Constructed
+14 - Constructed
+9 - Constructed
+14 - Constructed
+9 - Constructed
+9 - Copied
+9 - Constructed
+14 - Constructed
+Added Node
+10 - Constructed
+15 - Constructed
+10 - Constructed
+15 - Constructed
+10 - Constructed
+10 - Copied
+10 - Constructed
+15 - Constructed
+Added Node
+11 - Constructed
+1 - Constructed
+11 - Constructed
+1 - Constructed
+11 - Constructed
+11 - Copied
+11 - Constructed
+1 - Constructed
+Added Node
+12 - Constructed
+2 - Constructed
+12 - Constructed
+2 - Constructed
+12 - Constructed
+12 - Copied
+12 - Constructed
+2 - Constructed
+Added Node
+13 - Constructed
+3 - Constructed
+13 - Constructed
+3 - Constructed
+13 - Constructed
+13 - Copied
+13 - Constructed
+3 - Constructed
+Added Node
+14 - Constructed
+4 - Constructed
+14 - Constructed
+4 - Constructed
+14 - Constructed
+14 - Copied
+Added Node
+15 - Constructed
+5 - Constructed
+15 - Constructed
+5 - Constructed
+15 - Constructed
+15 - Copied
+Added Node
+1 - Constructed
+7 - Constructed
+1 - Constructed
+7 - Constructed
+1 - Constructed
+1 - Copied
+1 - Constructed
+7 - Constructed
+Added Node
+2 - Constructed
+8 - Constructed
+2 - Constructed
+8 - Constructed
+2 - Constructed
+2 - Copied
+Added Node
+3 - Constructed
+9 - Constructed
+3 - Constructed
+9 - Constructed
+3 - Constructed
+3 - Copied
+Added Node
+Graph loaded from file.
+
+Shortest path from 1 to 10:
+Length: 0
+
+Shortest path from 3 to 15:
+Length: 0
+
+Shortest path from 5 to 14:
+Length: 0
+
+Shortest path from 2 to 8:
+Length: 0
+
+Shortest path from 7 to 12:
+Length: 0
+
+Shortest path from 1 to 12:
+Length: 0
+
+Shortest path from 2 to 11:
+Length: 0
+
+Shortest path from 6 to 13:
+Length: 0
+
+Edge (5,6) exists? 5 - Constructed
+6 - Constructed
+5 - Constructed
+5 - Copied
+1
+5 - Constructed
+6 - Constructed
+5 - Constructed
+5 - Copied
+5 - Constructed
+6 - Constructed
+Edge (5,6) exists after removal? 5 - Constructed
+6 - Constructed
+5 - Constructed
+5 - Copied
+0
+
+Path exists from 1 to 15? No
+Path exists from 10 to 5? No
+Path exists from 8 to 14? No
+Path exists from 1 to 100? No
+
+Removing node 7...
+7 - Constructed
+7 - Constructed
+2 - Constructed
+6 - Constructed
+8 - Constructed
+12 - Constructed
+1 - Constructed
+Path exists from 1 to 7? No
+Edge (6,7) exists? 6 - Constructed
+7 - Constructed
+6 - Constructed
+6 - Copied
+0
+
+Adding edge (7, 20)...
+7 - Constructed
+20 - Constructed
+20 - Constructed
+20 - Assigned
+7 - Constructed
+20 - Constructed
+7 - Constructed
+7 - Copied
+7 - Constructed
+20 - Constructed
+Added Node
+Path exists from 7 to 20? No
+Length: 0
+Neighbors of node 3: 3 - Constructed
+3 - Constructed
+3 - Copied
+1 9 10 11 12 13 

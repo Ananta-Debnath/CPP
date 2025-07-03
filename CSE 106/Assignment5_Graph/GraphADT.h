@@ -2,6 +2,8 @@
 #ifndef GRAPH_ADT_H
 #define GRAPH_ADT_H
 
+#include "ArrayList.hpp"
+
 
 class GraphADT {
 public:
@@ -33,7 +35,7 @@ public:
     virtual int FindShortestPathLength(int u, int v) const = 0;
 
     // Find the neighbors of the node u. YourListType is the data type of your own list.
-    virtual YourListType GetNeighbors(int u) const = 0;
+    virtual ArrayList<int> GetNeighbors(int u) const = 0;
 
 };
 

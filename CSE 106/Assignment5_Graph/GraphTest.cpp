@@ -4,7 +4,7 @@
 #include <string>
 #include "GraphADT.h"
 #include "AdjacencyListGraph.h"
-#include "AdjacencyMatrixGraph.h"
+// #include "AdjacencyMatrixGraph.h"
 
 // Toggle between implementations
 #define USE_ADJACENCY_LIST

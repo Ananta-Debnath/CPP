@@ -21,8 +21,4 @@ int main()
 
     for (int x : *arr) cout << x << " ";
     cout << endl;
-
-    cout << (*arr)[2] << endl;
-    (*arr)[2] = 1;
-    cout << (*arr)[2] << endl;
 }

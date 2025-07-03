@@ -14,7 +14,7 @@ private:
         if (new_capacity != capacity)
         {
             capacity = new_capacity;
-            int* newArray = new int[capacity];
+            T* newArray = new T[capacity];
             for (int i = 0; i < length; i++) newArray[i] = array[i];
 
             delete[] array;
@@ -33,25 +33,31 @@ public:
         this->capacity = capacity;
     }
 
+    ArrayList(const ArrayList<T>& arr)
+    {
+        length = arr.length;
+        capacity = arr.capacity;
+        array = new T[capacity];
+        for (int i = 0; i < length; i++) array[i] = arr.array[i];
+    }
+
     // Destructor
     ~ArrayList()
     {
         delete[] array;
     }
 
-    // Subscript operator overload
-    T& operator[](int idx)
+    // Assignment operator overload
+    ArrayList<T>& operator=(const ArrayList<T>& arr)
     {
-        if (idx < 0 || idx >= length) throw std::runtime_error("Invalid index");
+        if (this == &arr) return *this;
 
-        else return array[idx];
-    }
-
-    T& get(int idx)
-    {
-        if (idx < 0 || idx >= length) throw std::runtime_error("Invalid index");
-
-        else return array[idx];
+        delete array;
+        length = arr.length;
+        capacity = arr.capacity;
+        array = new T[capacity];
+        for (int i = 0; i < length; i++) array[i] = arr.array[i];
+        return *this;
     }
 
     void add(T value)
@@ -79,13 +85,46 @@ public:
         if (length * 4 < capacity && capacity > 3) resize(capacity / 2); // decrease capacity
     }
 
-    bool contains(T value)
+    bool contains(T value) const
     {
         for (int i = 0; i < length; i++)
         {
             if (array[i] == value) return true;
         }
         return false;
+    }
+
+    int indexOf(T value) const
+    {
+        for (int i = 0; i < length; i++)
+        {
+            if (array[i] == value) return i;
+        }
+        return -1;
+    }
+    
+    T& get(int idx)
+    {
+        if (idx < 0 || idx >= length) throw std::runtime_error("Invalid index");
+
+        else return array[idx];
+    }
+
+    T get(int idx) const
+    {
+        if (idx < 0 || idx >= length) throw std::runtime_error("Invalid index");
+
+        else return array[idx];
+    }
+
+    T* begin() const
+    {
+        return &array[0];
+    }
+
+    T* end() const
+    {
+        return &array[length];
     }
 
     T* begin()
@@ -98,10 +137,16 @@ public:
         return &array[length];
     }
 
-    int size()
+    int size() const
     {
         return length;
     }
 
-    
+    void clear()
+    {
+        delete[] array;
+        length = 0;
+        capacity = 2;
+        array = new T[capacity];
+    }
 };

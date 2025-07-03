@@ -55,7 +55,7 @@ public:
     {
         //TODO: Return the shortest path length between nodes u and v if any such path exists. Otherwise return -1.
     }
-    YourListType GetNeighbors(int u) const override
+    ArrayList<int> GetNeighbors(int u) const override
     {
         //TODO return a list of neighbors of node u
 
