@@ -68,9 +68,8 @@ public:
     void AddEdge(int u, int v) override
     {
         //TODO: Add a new edge between the nodes u and v
-        if (!nodes.contains(u)) AddNode(u);
-
-        if (!nodes.contains(v)) AddNode(v);
+        AddNode(u);
+        AddNode(v);
 
         if (!CheckEdge(u, v))
         {
@@ -92,6 +91,7 @@ public:
         {
             auto arr = nodes.get(nodes.indexOf(v)).ajList;
             for (int x : arr) nodes.get(nodes.indexOf(x)).ajList.remove(v);
+            nodes.remove(v);
         }
         else std::cout << "Node doesn't exists" << std::endl;
     }

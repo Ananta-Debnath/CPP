@@ -52,7 +52,7 @@ public:
     {
         if (this == &arr) return *this;
 
-        delete array;
+        delete[] array;
         length = arr.length;
         capacity = arr.capacity;
         array = new T[capacity];
