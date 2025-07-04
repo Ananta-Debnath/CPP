@@ -11,7 +11,7 @@ private:
     {
     public:
         int value;
-        ArrayList<int> ajList;
+        ArrayList<int> adjList;
 
         Node(int val = 0)
         {
@@ -22,16 +22,16 @@ private:
         Node(const Node& node)
         {
             value = node.value;
-            for (int x : node.ajList) ajList.add(x);
+            for (int x : node.adjList) adjList.add(x);
             // std::cout << value << " - Copied" << std::endl;
         }
 
         Node& operator=(const Node& node)
         {
             if (this == &node) return *this;
-            ajList.clear();
+            adjList.clear();
             value = node.value;
-            for (int x : node.ajList) ajList.add(x);
+            for (int x : node.adjList) adjList.add(x);
             // std::cout << value << " - Assigned" << std::endl;
             return *this;
         }
@@ -48,7 +48,7 @@ private:
     void checkDist(int v, int* dist)
     {
         int idx = nodes.indexOf(v);
-        for (int x : nodes.getAt(idx).ajList)
+        for (int x : nodes.getAt(idx).adjList)
         {
             if(dist[nodes.indexOf(x)] > dist[idx] + 1)
             {
@@ -73,15 +73,15 @@ public:
 
         if (!CheckEdge(u, v))
         {
-            nodes.getAt(nodes.indexOf(u)).ajList.add(v);
-            nodes.getAt(nodes.indexOf(v)).ajList.add(u);
+            nodes.getAt(nodes.indexOf(u)).adjList.add(v);
+            nodes.getAt(nodes.indexOf(v)).adjList.add(u);
         }
     }
 
     bool CheckEdge(int u, int v) const override
     {
         //TODO: Check whether there is an edge between two nodes u and v
-        return nodes.contains(u) && nodes.contains(v) && nodes.getAt(nodes.indexOf(u)).ajList.contains(v);
+        return nodes.contains(u) && nodes.contains(v) && nodes.getAt(nodes.indexOf(u)).adjList.contains(v);
     }
 
     void RemoveNode(int v) override
@@ -89,8 +89,8 @@ public:
         //TODO: Remove a node.
         if (nodes.contains(v))
         {
-            auto arr = nodes.getAt(nodes.indexOf(v)).ajList;
-            for (int x : arr) nodes.getAt(nodes.indexOf(x)).ajList.remove(v);
+            auto arr = nodes.getAt(nodes.indexOf(v)).adjList;
+            for (int x : arr) nodes.getAt(nodes.indexOf(x)).adjList.remove(v);
             nodes.remove(v);
         }
         else std::cout << "Node doesn't exists" << std::endl;
@@ -101,8 +101,8 @@ public:
         //TODO: remove an edge
         if (CheckEdge(u, v))
         {
-            nodes.getAt(nodes.indexOf(u)).ajList.remove(v);
-            nodes.getAt(nodes.indexOf(v)).ajList.remove(u);
+            nodes.getAt(nodes.indexOf(u)).adjList.remove(v);
+            nodes.getAt(nodes.indexOf(v)).adjList.remove(u);
         }
         else std::cout << "Edge doesn't exists" << std::endl;
     }
@@ -131,7 +131,7 @@ public:
                 int n = queue.getAt(0);
                 queue.removeAt(0);
 
-                for (int x : nodes.getAt(nodes.indexOf(n)).ajList)
+                for (int x : nodes.getAt(nodes.indexOf(n)).adjList)
                 {
                     if(dist[nodes.indexOf(x)] > dist[nodes.indexOf(n)] + 1)
                     {
@@ -142,9 +142,13 @@ public:
                 }
             }
 
-            std::cout << "Shortest path: ";
-            for (int n = u; n != v; n = par[nodes.indexOf(n)]) std::cout << n << " ";
-            std::cout << v << " " << std::endl;
+            if (dist[nodes.indexOf(u)] < l)
+            {
+                std::cout << "Shortest path: ";
+                for (int n = u; n != v; n = par[nodes.indexOf(n)]) std::cout << n << " ";
+                std::cout << v << " " << std::endl;
+            }
+            else std::cout << "No path exists" << std::endl;
 
             delete[] dist;
             delete[] par;
@@ -168,7 +172,7 @@ public:
                 int n = queue.getAt(0);
                 queue.removeAt(0);
 
-                for (int x : nodes.getAt(nodes.indexOf(n)).ajList)
+                for (int x : nodes.getAt(nodes.indexOf(n)).adjList)
                 {
                     if(dist[nodes.indexOf(x)] > dist[nodes.indexOf(n)] + 1)
                     {
@@ -195,7 +199,7 @@ public:
         ArrayList<int> neighbors;
         if (nodes.contains(u))
         {
-            neighbors = nodes.getAt(nodes.indexOf(u)).ajList;
+            neighbors = nodes.getAt(nodes.indexOf(u)).adjList;
         }
         return neighbors;
     }

@@ -9,7 +9,7 @@ class AdjacencyMatrixGraph : public GraphADT
 private:
     //TODO: Consider necessary private members as per your discretion
     ArrayList<int> nodes;
-    int** ajMat;
+    int** adjMat;
     int length;
     int capacity;
 
@@ -30,14 +30,14 @@ private:
 
             for (int i = 0; i < length; i++)
             {
-                for (int j = 0; j < length; j++) newMatrix[i][j] = ajMat[i][j];
+                for (int j = 0; j < length; j++) newMatrix[i][j] = adjMat[i][j];
             }
 
-            for (int i = 0; i < capacity; i++) delete[] ajMat[i];
-            delete[] ajMat;
+            for (int i = 0; i < capacity; i++) delete[] adjMat[i];
+            delete[] adjMat;
 
             capacity = new_capacity;
-            ajMat = newMatrix;
+            adjMat = newMatrix;
         }
     }
 
@@ -49,19 +49,19 @@ public:
 
         this->capacity = capacity;
         length = 0;
-        ajMat = new int*[capacity];
-        for (int i = 0; i < capacity; i++) ajMat[i] = new int[capacity]();
+        adjMat = new int*[capacity];
+        for (int i = 0; i < capacity; i++) adjMat[i] = new int[capacity]();
     }
 
     ~AdjacencyMatrixGraph()
     {
-        for (int i = 0; i < capacity; i++) delete[] ajMat[i];
-        delete[] ajMat;
+        for (int i = 0; i < capacity; i++) delete[] adjMat[i];
+        delete[] adjMat;
     }
 
     void AddNode(int v) override
     {
-        //TODO: Add a new node v and resize the ajMat if your current ajMat is almost going to be full.
+        //TODO: Add a new node v and resize the adjMat if your current adjMat is almost going to be full.
         if (nodes.indexOf(v) == -1)
         {
             nodes.add(v);
@@ -76,14 +76,14 @@ public:
         AddNode(u);
         AddNode(v);
 
-        ajMat[nodes.indexOf(u)][nodes.indexOf(v)] = 1;
-        ajMat[nodes.indexOf(v)][nodes.indexOf(u)] = 1;
+        adjMat[nodes.indexOf(u)][nodes.indexOf(v)] = 1;
+        adjMat[nodes.indexOf(v)][nodes.indexOf(u)] = 1;
     }
 
     bool CheckEdge(int u, int v) const override
     {
         //TODO: Check whether there is an edge between two nodes u and v
-        return nodes.indexOf(u) != -1 && nodes.indexOf(v) != -1 && ajMat[nodes.indexOf(u)][nodes.indexOf(v)] == 1;
+        return nodes.indexOf(u) != -1 && nodes.indexOf(v) != -1 && adjMat[nodes.indexOf(u)][nodes.indexOf(v)] == 1;
     }
 
     void RemoveNode(int v) override
@@ -94,14 +94,14 @@ public:
         {
             nodes.remove(v);
 
-            delete[] ajMat[idx];
+            delete[] adjMat[idx];
             length--;
-            for (int i = idx; i < length; i++) ajMat[i] = ajMat[i+1];
-            ajMat[length] = new int[capacity];
+            for (int i = idx; i < length; i++) adjMat[i] = adjMat[i+1];
+            adjMat[length] = new int[capacity];
 
             for (int i = 0; i < length; i++)
             {
-                for (int j = idx; j < length; j++) ajMat[i][j] = ajMat[i][j+1];
+                for (int j = idx; j < length; j++) adjMat[i][j] = adjMat[i][j+1];
             }
             resizeMatrix();
         }
@@ -113,8 +113,8 @@ public:
         //TODO: remove an edge
         if (CheckEdge(u, v))
         {
-            ajMat[nodes.indexOf(u)][nodes.indexOf(v)] = 0;
-            ajMat[nodes.indexOf(v)][nodes.indexOf(u)] = 0;
+            adjMat[nodes.indexOf(u)][nodes.indexOf(v)] = 0;
+            adjMat[nodes.indexOf(v)][nodes.indexOf(u)] = 0;
         }
         else std::cout << "Edge doesn't exists" << std::endl;
     }
@@ -145,7 +145,7 @@ public:
 
                 for (int i = 0; i < length; i++)
                 {
-                    if(ajMat[idx][i] == 1 && dist[i] > dist[idx] + 1)
+                    if(adjMat[idx][i] == 1 && dist[i] > dist[idx] + 1)
                     {
                         dist[i] = dist[idx] + 1;
                         par[i] = n;
@@ -154,9 +154,13 @@ public:
                 }
             }
 
-            std::cout << "Shortest path: ";
-            for (int n = u; n != v; n = par[nodes.indexOf(n)]) std::cout << n << " ";
-            std::cout << v << " " << std::endl;
+            if (dist[nodes.indexOf(u)] < length)
+            {
+                std::cout << "Shortest path: ";
+                for (int n = u; n != v; n = par[nodes.indexOf(n)]) std::cout << n << " ";
+                std::cout << v << " " << std::endl;
+            }
+            else std::cout << "No path exists" << std::endl;
 
             delete[] dist;
             delete[] par;
@@ -182,7 +186,7 @@ public:
 
                 for (int i = 0; i < length; i++)
                 {
-                    if(ajMat[idx][i] == 1 && dist[i] > dist[idx] + 1)
+                    if(adjMat[idx][i] == 1 && dist[i] > dist[idx] + 1)
                     {
                         dist[i] = dist[idx] + 1;
                         queue.add(nodes.getAt(i));
@@ -207,7 +211,7 @@ public:
         {
             for (int i = 0; i < length; i++)
             {
-                if (ajMat[idx][i] == 1) neighbors.add(nodes.getAt(i));
+                if (adjMat[idx][i] == 1) neighbors.add(nodes.getAt(i));
             }
         }
         return neighbors;
