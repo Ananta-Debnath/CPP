@@ -67,22 +67,22 @@ public:
         array[length-1] = value;
     }
 
+    void removeAt(int idx)
+    {
+        if (idx >= 0 && idx < length)
+        {
+            length--;
+            for (int i = idx; i < length; i++)
+            {
+                array[i] = array[i+1];
+            }
+            if (length * 4 < capacity && capacity > 3) resize(capacity / 2); // decrease capacity
+        }
+    }
+
     void remove(T value)
     {
-        for (int i = 0; i < length; i++)
-        {
-            if (array[i] == value)
-            {
-                length--;
-                for (int j = i; j < length; j++)
-                {
-                    array[j] = array[j+1];
-                }
-                break;
-            }
-        }
-
-        if (length * 4 < capacity && capacity > 3) resize(capacity / 2); // decrease capacity
+        removeAt(indexOf(value));
     }
 
     bool contains(T value) const
