@@ -48,7 +48,7 @@ private:
     void checkDist(int v, int* dist)
     {
         int idx = nodes.indexOf(v);
-        for (int x : nodes.get(idx).ajList)
+        for (int x : nodes.getAt(idx).ajList)
         {
             if(dist[nodes.indexOf(x)] > dist[idx] + 1)
             {
@@ -73,15 +73,15 @@ public:
 
         if (!CheckEdge(u, v))
         {
-            nodes.get(nodes.indexOf(u)).ajList.add(v);
-            nodes.get(nodes.indexOf(v)).ajList.add(u);
+            nodes.getAt(nodes.indexOf(u)).ajList.add(v);
+            nodes.getAt(nodes.indexOf(v)).ajList.add(u);
         }
     }
 
     bool CheckEdge(int u, int v) const override
     {
         //TODO: Check whether there is an edge between two nodes u and v
-        return nodes.contains(u) && nodes.contains(v) && nodes.get(nodes.indexOf(u)).ajList.contains(v);
+        return nodes.contains(u) && nodes.contains(v) && nodes.getAt(nodes.indexOf(u)).ajList.contains(v);
     }
 
     void RemoveNode(int v) override
@@ -89,8 +89,8 @@ public:
         //TODO: Remove a node.
         if (nodes.contains(v))
         {
-            auto arr = nodes.get(nodes.indexOf(v)).ajList;
-            for (int x : arr) nodes.get(nodes.indexOf(x)).ajList.remove(v);
+            auto arr = nodes.getAt(nodes.indexOf(v)).ajList;
+            for (int x : arr) nodes.getAt(nodes.indexOf(x)).ajList.remove(v);
             nodes.remove(v);
         }
         else std::cout << "Node doesn't exists" << std::endl;
@@ -101,8 +101,8 @@ public:
         //TODO: remove an edge
         if (CheckEdge(u, v))
         {
-            nodes.get(nodes.indexOf(u)).ajList.remove(v);
-            nodes.get(nodes.indexOf(v)).ajList.remove(u);
+            nodes.getAt(nodes.indexOf(u)).ajList.remove(v);
+            nodes.getAt(nodes.indexOf(v)).ajList.remove(u);
         }
         else std::cout << "Edge doesn't exists" << std::endl;
     }
@@ -128,10 +128,10 @@ public:
             queue.add(v);
             while (queue.size() != 0)
             {
-                int n = queue.get(0);
-                queue.remove(n);
+                int n = queue.getAt(0);
+                queue.removeAt(0);
 
-                for (int x : nodes.get(nodes.indexOf(n)).ajList)
+                for (int x : nodes.getAt(nodes.indexOf(n)).ajList)
                 {
                     if(dist[nodes.indexOf(x)] > dist[nodes.indexOf(n)] + 1)
                     {
@@ -165,10 +165,10 @@ public:
             queue.add(u);
             while (queue.size() != 0)
             {
-                int n = queue.get(0);
+                int n = queue.getAt(0);
                 queue.remove(n);
 
-                for (int x : nodes.get(nodes.indexOf(n)).ajList)
+                for (int x : nodes.getAt(nodes.indexOf(n)).ajList)
                 {
                     if(dist[nodes.indexOf(x)] > dist[nodes.indexOf(n)] + 1)
                     {
@@ -195,7 +195,7 @@ public:
         ArrayList<int> neighbors;
         if (nodes.contains(u))
         {
-            neighbors = nodes.get(nodes.indexOf(u)).ajList;
+            neighbors = nodes.getAt(nodes.indexOf(u)).ajList;
         }
         return neighbors;
     }

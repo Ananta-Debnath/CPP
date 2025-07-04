@@ -103,14 +103,14 @@ public:
         return -1;
     }
     
-    T& get(int idx)
+    T& getAt(int idx)
     {
         if (idx < 0 || idx >= length) throw std::runtime_error("Invalid index");
 
         else return array[idx];
     }
 
-    T get(int idx) const
+    T getAt(int idx) const
     {
         if (idx < 0 || idx >= length) throw std::runtime_error("Invalid index");
 

@@ -145,7 +145,7 @@ public:
             queue.add(v);
             while (queue.size() != 0)
             {
-                int n = queue.get(0);
+                int n = queue.getAt(0);
                 int idx = indexOf(n);
                 queue.remove(n);
 
@@ -182,7 +182,7 @@ public:
             queue.add(u);
             while (queue.size() != 0)
             {
-                int n = queue.get(0);
+                int n = queue.getAt(0);
                 int idx = indexOf(n);
                 queue.remove(n);
 
