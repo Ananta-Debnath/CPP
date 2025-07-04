@@ -166,7 +166,7 @@ public:
             while (queue.size() != 0)
             {
                 int n = queue.getAt(0);
-                queue.remove(n);
+                queue.removeAt(0);
 
                 for (int x : nodes.getAt(nodes.indexOf(n)).ajList)
                 {

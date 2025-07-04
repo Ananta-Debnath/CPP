@@ -8,7 +8,8 @@ class AdjacencyMatrixGraph : public GraphADT
 {
 private:
     //TODO: Consider necessary private members as per your discretion
-    int** matrix;
+    ArrayList<int> nodes;
+    int** ajMat;
     int length;
     int capacity;
 
@@ -27,26 +28,17 @@ private:
 
             for (int i = 0; i < new_capacity; i++) newMatrix[i] = new int[new_capacity]();
 
-            for (int i = 0; i <= length; i++)
+            for (int i = 0; i < length; i++)
             {
-                for (int j = 0; j <= length; j++) newMatrix[i][j] = matrix[i][j];
+                for (int j = 0; j < length; j++) newMatrix[i][j] = ajMat[i][j];
             }
 
-            for (int i = 0; i < capacity; i++) delete[] matrix[i];
-            delete[] matrix;
+            for (int i = 0; i < capacity; i++) delete[] ajMat[i];
+            delete[] ajMat;
 
             capacity = new_capacity;
-            matrix = newMatrix;
+            ajMat = newMatrix;
         }
-    }
-
-    int indexOf(int v) const
-    {
-        for (int i = 1; i <= length; i++)
-        {
-            if (matrix[i][0] == v) return i;
-        }
-        return -1;
     }
 
 public:
@@ -57,23 +49,23 @@ public:
 
         this->capacity = capacity;
         length = 0;
-        matrix = new int*[capacity];
-        for (int i = 0; i < capacity; i++) matrix[i] = new int[capacity]();
+        ajMat = new int*[capacity];
+        for (int i = 0; i < capacity; i++) ajMat[i] = new int[capacity]();
     }
 
     ~AdjacencyMatrixGraph()
     {
-        for (int i = 0; i < capacity; i++) delete[] matrix[i];
-        delete[] matrix;
+        for (int i = 0; i < capacity; i++) delete[] ajMat[i];
+        delete[] ajMat;
     }
 
     void AddNode(int v) override
     {
-        //TODO: Add a new node v and resize the matrix if your current matrix is almost going to be full.
-        if (indexOf(v) == -1)
+        //TODO: Add a new node v and resize the ajMat if your current ajMat is almost going to be full.
+        if (nodes.indexOf(v) == -1)
         {
-            matrix[++length][0] = v;
-            matrix[0][length] = v;
+            nodes.add(v);
+            length++; 
             resizeMatrix();
         }
     }
@@ -84,31 +76,33 @@ public:
         AddNode(u);
         AddNode(v);
 
-        matrix[indexOf(u)][indexOf(v)] = 1;
-        matrix[indexOf(v)][indexOf(u)] = 1;
+        ajMat[nodes.indexOf(u)][nodes.indexOf(v)] = 1;
+        ajMat[nodes.indexOf(v)][nodes.indexOf(u)] = 1;
     }
 
     bool CheckEdge(int u, int v) const override
     {
         //TODO: Check whether there is an edge between two nodes u and v
-        return indexOf(u) != -1 && indexOf(v) != -1 && matrix[indexOf(u)][indexOf(v)] == 1;
+        return nodes.indexOf(u) != -1 && nodes.indexOf(v) != -1 && ajMat[nodes.indexOf(u)][nodes.indexOf(v)] == 1;
     }
 
     void RemoveNode(int v) override
     {
         //TODO: Remove a node.
-        int idx = indexOf(v);
+        int idx = nodes.indexOf(v);
         if (idx != -1)
         {
-            delete[] matrix[idx];
-            for (int i = idx; i < length; i++) matrix[i] = matrix[i+1];
-            matrix[length] = new int[capacity];
+            nodes.remove(v);
 
-            for (int i = 1; i < length; i++)
-            {
-                for (int j = idx; j < length; j++) matrix[i][j] = matrix[i][j+1];
-            }
+            delete[] ajMat[idx];
             length--;
+            for (int i = idx; i < length; i++) ajMat[i] = ajMat[i+1];
+            ajMat[length] = new int[capacity];
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = idx; j < length; j++) ajMat[i][j] = ajMat[i][j+1];
+            }
             resizeMatrix();
         }
         else std::cout << "Node doesn't exists" << std::endl;
@@ -119,8 +113,8 @@ public:
         //TODO: remove an edge
         if (CheckEdge(u, v))
         {
-            matrix[indexOf(u)][indexOf(v)] = 0;
-            matrix[indexOf(v)][indexOf(u)] = 0;
+            ajMat[nodes.indexOf(u)][nodes.indexOf(v)] = 0;
+            ajMat[nodes.indexOf(v)][nodes.indexOf(u)] = 0;
         }
         else std::cout << "Edge doesn't exists" << std::endl;
     }
@@ -134,34 +128,34 @@ public:
     void FindShortestPath(int u, int v) const override
     {
         //TODO: Find the shortest path between the nodes u and v and print it.
-        if (indexOf(u) != -1 && indexOf(v) != -1)
+        if (nodes.indexOf(u) != -1 && nodes.indexOf(v) != -1)
         {
-            int* dist = new int[length+1];
-            int* par = new int[length+1];
-            for (int i = 0; i <= length; i++) dist[i] = length;
-            dist[indexOf(v)] = 0;
+            int* dist = new int[length];
+            int* par = new int[length];
+            for (int i = 0; i < length; i++) dist[i] = length;
+            dist[nodes.indexOf(v)] = 0;
 
             ArrayList<int> queue;
             queue.add(v);
             while (queue.size() != 0)
             {
                 int n = queue.getAt(0);
-                int idx = indexOf(n);
-                queue.remove(n);
+                int idx = nodes.indexOf(n);
+                queue.removeAt(0);
 
-                for (int i = 1; i <= length; i++)
+                for (int i = 0; i < length; i++)
                 {
-                    if(matrix[idx][i] == 1 && dist[i] > dist[idx] + 1)
+                    if(ajMat[idx][i] == 1 && dist[i] > dist[idx] + 1)
                     {
                         dist[i] = dist[idx] + 1;
                         par[i] = n;
-                        queue.add(matrix[i][0]);
+                        queue.add(nodes.getAt(i));
                     }
                 }
             }
 
             std::cout << "Shortest path: ";
-            for (int n = u; n != v; n = par[indexOf(n)]) std::cout << n << " ";
+            for (int n = u; n != v; n = par[nodes.indexOf(n)]) std::cout << n << " ";
             std::cout << v << " " << std::endl;
 
             delete[] dist;
@@ -172,32 +166,32 @@ public:
     int FindShortestPathLength(int u, int v) const override
     {
         //TODO: Return the shortest path length between nodes u and v if any such path exists. Otherwise return -1.
-        if (indexOf(u) != -1 && indexOf(v) != -1)
+        if (nodes.indexOf(u) != -1 && nodes.indexOf(v) != -1)
         {
-            int* dist = new int[length+1];
-            for (int i = 0; i <= length; i++) dist[i] = length;
-            dist[indexOf(u)] = 0;
+            int* dist = new int[length];
+            for (int i = 0; i < length; i++) dist[i] = length;
+            dist[nodes.indexOf(u)] = 0;
 
             ArrayList<int> queue;
             queue.add(u);
             while (queue.size() != 0)
             {
                 int n = queue.getAt(0);
-                int idx = indexOf(n);
-                queue.remove(n);
+                int idx = nodes.indexOf(n);
+                queue.removeAt(0);
 
-                for (int i = 1; i <= length; i++)
+                for (int i = 0; i < length; i++)
                 {
-                    if(matrix[idx][i] == 1 && dist[i] > dist[idx] + 1)
+                    if(ajMat[idx][i] == 1 && dist[i] > dist[idx] + 1)
                     {
                         dist[i] = dist[idx] + 1;
-                        queue.add(matrix[i][0]);
+                        queue.add(nodes.getAt(i));
                     }
                 }
             }
 
             int n = -1;
-            if (dist[indexOf(v)] < length) n = dist[indexOf(v)];
+            if (dist[nodes.indexOf(v)] < length) n = dist[nodes.indexOf(v)];
 
             delete[] dist;
             return n;
@@ -207,13 +201,13 @@ public:
     ArrayList<int> GetNeighbors(int u) const override
     {
         //TODO return a list of neighbors of node u
-        int idx = indexOf(u);
+        int idx = nodes.indexOf(u);
         ArrayList<int> neighbors;
         if (idx != -1)
         {
-            for (int i = 1; i <= length; i++)
+            for (int i = 0; i < length; i++)
             {
-                if (matrix[idx][i] == 1) neighbors.add(matrix[i][0]);
+                if (ajMat[idx][i] == 1) neighbors.add(nodes.getAt(i));
             }
         }
         return neighbors;
