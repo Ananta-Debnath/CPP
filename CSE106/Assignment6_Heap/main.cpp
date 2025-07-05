@@ -23,7 +23,7 @@ int main()
     string myText;
     ifstream MyReadFile("numbers.txt");
     while (getline (MyReadFile, myText))
-      numbers.push_back(atoi(myText.c_str()));
+        numbers.push_back(atoi(myText.c_str()));
     MyReadFile.close();
     //reading from file ends
 
@@ -53,7 +53,7 @@ int main()
 
     int len = pq.size();
 
-    sort(numbers.begin(), numbers.end(), comp);
+    // sort(numbers.begin(), numbers.end(), comp);
     
     for(int i = 0; i < len; i++)
     {

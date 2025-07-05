@@ -18,12 +18,14 @@ int main()
     while (getline (MyReadFile, myText))
     {
         n = atoi(myText.c_str());
+        // cout << i << ": " << m << " -- " << n << endl;
         if (m < n)
         {
             cout << i << ": " << m << " -- " << n << endl;
             MyReadFile.close();
             break;
         }
+        m = n;
         i++;
     }
     cout << "All OK" << endl;
