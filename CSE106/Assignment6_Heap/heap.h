@@ -118,4 +118,14 @@ public:
     }
 };
 
-// void heapsort(vector<int>& v);
+void heapsort(vector<int>& v)
+{
+    Heap heap(v);
+    v.clear();
+
+    while (heap.size() != 0)
+    {
+        v.push_back(heap.getMax());
+        heap.deleteKey();
+    }
+}
