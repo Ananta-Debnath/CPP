@@ -11,7 +11,7 @@ int main()
 {
     //reading from file begins. Loading all the numbers in the vector
     string myText;
-    ifstream MyReadFile("out.txt");
+    ifstream MyReadFile("out.txt"); // only works with UTF-8
     getline (MyReadFile, myText);
     int m = atoi(myText.c_str());
     int n, i = 0;

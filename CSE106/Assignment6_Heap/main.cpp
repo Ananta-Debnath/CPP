@@ -51,8 +51,41 @@ int main()
     cout<<h.getMax()<<endl;
     // returning the maximum number of the heap. You need to implement this.
 
-    int len = pq.size();
 
+    clock_t time_of_deletion_in_pq = clock();
+
+    int number_of_numbers = pq.size();
+
+    for(int i = 0; i < number_of_numbers; i++)
+        pq.pop();
+
+    cout << "Deleting " << numbers.size() << " numbers from priority queue takes "<< float(clock() - time_of_deletion_in_pq) / CLOCKS_PER_SEC << " seconds\n";
+
+    clock_t time_of_deletion_in_my_heap = clock();
+
+    for(int i = 0; i < number_of_numbers; i++)
+        h.deleteKey(); // deleting the root of the heap.
+        // You need to implement this in such a way that
+        //the remaining tree remains complete binary tree.
+
+    cout << "Deleting " << numbers.size() << " numbers from my heap takes "<< float(clock() - time_of_deletion_in_my_heap) / CLOCKS_PER_SEC << " seconds\n";
+
+    // Test
+    time_of_insertion_in_pq = clock();
+
+    for(int i = 0; i < numbers.size(); i++)
+        pq.push(numbers[i]);
+
+    cout << "Inserting " << pq.size() << " numbers in priority queue takes "<< float(clock() - time_of_insertion_in_pq) / CLOCKS_PER_SEC << " seconds\n";
+
+    time_of_insertion_in_my_heap = clock();
+
+    for(int i = 0; i < numbers.size(); i++)
+        h.insert(numbers[i]);
+
+    cout << "Inserting " << h.size() << " numbers in my heap takes "<< float(clock() - time_of_insertion_in_my_heap) / CLOCKS_PER_SEC << " seconds\n";
+
+    int len = pq.size();
     // sort(numbers.begin(), numbers.end(), comp);
     
     for(int i = 0; i < len; i++)
@@ -67,29 +100,20 @@ int main()
     }
 
     cout << "All Passed" << endl;
-    
-
-    // clock_t time_of_deletion_in_pq = clock();
-
-    // int number_of_numbers = pq.size();
-
-    // for(int i = 0; i < number_of_numbers; i++)
-    //     pq.pop();
-
-    // cout << "Deleting " << numbers.size() << " numbers from priority queue takes "<< float(clock() - time_of_deletion_in_pq) / CLOCKS_PER_SEC << " seconds\n";
-
-    // clock_t time_of_deletion_in_my_heap = clock();
-
-    // for(int i = 0; i < number_of_numbers; i++)
-    //     h.deleteKey(); // deleting the root of the heap.
-    //     // You need to implement this in such a way that
-    //     //the remaining tree remains complete binary tree.
-
-    // cout << "Deleting " << numbers.size() << " numbers from my heap takes "<< float(clock() - time_of_deletion_in_my_heap) / CLOCKS_PER_SEC << " seconds\n";
 
     heapsort(numbers); // You need to implement this function in heap.h. You should use the heap class implemented by you to do this. Hint: the function declaration should be void heapsort(vector<int>&v);
     // Now, "numbers" vector contains the numbers in descending order
 
-    for (int x : numbers) cout << x << endl;
+    for (int i = 1; i < numbers.size(); i++)
+    {
+        if (numbers[i-1] < numbers[i])
+        {
+            cout << i << ": " << numbers[i-1] << " -- " << numbers[i] << endl;
+            break;
+        }
+    }
+    cout << "All OK" << endl;
+
+    // for (int x : numbers) cout << x << endl; // Prints the whole list
     return 0;
 }

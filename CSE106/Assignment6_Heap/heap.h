@@ -1,6 +1,4 @@
-#include <iostream>
 #include <vector>
-using namespace std;
 
 
 class Heap
@@ -23,17 +21,17 @@ private:
         }
     }
 
-    int parent(int idx)
+    int parent(int idx) const
     {
         return idx / 2;
     }
 
-    int left(int idx)
+    int left(int idx) const
     {
         return 2 * idx;
     }
 
-    int right(int idx)
+    int right(int idx) const
     {
         return (2 * idx) + 1;
     }
@@ -67,7 +65,7 @@ public:
         array = new int[capacity];
     }
 
-    Heap(vector<int>& v)
+    Heap(const std::vector<int>& v)
     {
         length = 0;
         capacity = v.size() + 1;
@@ -76,9 +74,16 @@ public:
         for (int x : v) insert(x);
     }
 
+    ~Heap()
+    {
+        delete[] array;
+    }
+
     void insert(int key)
     {
-        array[++length] = key;
+        length++;
+        if (length + 1 >= capacity) resize(capacity*2);
+        array[length] = key;
         
         int idx = length;
         int par = parent(idx);
@@ -90,11 +95,6 @@ public:
             idx = par;
             par = parent(idx);
         }
-        if (length + 1 >= capacity) resize(capacity*2);
-        
-        // cout << "Insert " << key << endl;
-        // for (int i = 0; i <= length; i++) cout << array[i] << " ";
-        // cout << endl;
     }
 
     void deleteKey()
@@ -114,11 +114,13 @@ public:
 
     int getMax() const
     {
-        return array[1];
+        if (length > 0) return array[1];
+
+        else throw std::runtime_error("Heap is empty");
     }
 };
 
-void heapsort(vector<int>& v)
+void heapsort(std::vector<int>& v)
 {
     Heap heap(v);
     v.clear();
