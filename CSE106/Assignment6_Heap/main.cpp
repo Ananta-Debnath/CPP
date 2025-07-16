@@ -101,6 +101,15 @@ int main()
 
     cout << "All Passed" << endl;
 
+    try
+    {
+        h.getMax();
+    }
+    catch(exception& e)
+    {
+        cout << e.what() << endl;
+    }
+
     heapsort(numbers); // You need to implement this function in heap.h. You should use the heap class implemented by you to do this. Hint: the function declaration should be void heapsort(vector<int>&v);
     // Now, "numbers" vector contains the numbers in descending order
 
