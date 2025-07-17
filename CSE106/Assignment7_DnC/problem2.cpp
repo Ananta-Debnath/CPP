@@ -50,8 +50,6 @@ int main()
 
     delete[] seats;
 
-    main();
-
     return 0;
 }
 
