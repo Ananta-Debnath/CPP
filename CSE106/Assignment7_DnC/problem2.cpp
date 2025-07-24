@@ -12,14 +12,14 @@ int seatAvailableInBench(int* bench, int seatCount)
 
     else
     {
-        if (bench[0] == 0 && bench[1] != 2) n++;
+        if (bench[0] == 0 && bench[1] != 2) n++; // First seat
 
         for (int i = 1; i < seatCount-1; i++)
         {
             if (bench[i] == 0 && bench[i-1] == 0 && bench[i+1] != 2) n++;
         }
 
-        if (bench[seatCount-1] == 0 && bench[seatCount-2] == 0) n++;
+        if (bench[seatCount-1] == 0 && bench[seatCount-2] == 0) n++; // Last seat
     }
 
     return n;
@@ -42,6 +42,7 @@ int main()
     for (int i = 0; i < n; i += seatPerBench)
     {
         available += seatAvailableInBench(&seats[i], seatPerBench);
+        if (m <= available) break;
     }
 
     if (m <= available) cout << "true" << endl;

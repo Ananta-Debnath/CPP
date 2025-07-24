@@ -13,6 +13,7 @@ bool isPossible(const vector<int>& workloads, int workload, int employeeCount)
         {
             sum = x;
             employeeCount--;
+            if (employeeCount == 0) return false;
         }
     }
     return (employeeCount > 0);
@@ -36,7 +37,7 @@ int main()
     }
 
     int m, res;
-    if (workloads.size() < k) m = -1;
+    if (workloads.size() < k) res = -1;
 
     else
     {
