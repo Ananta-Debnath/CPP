@@ -2,6 +2,61 @@
 using namespace std;
 
 
+void showStringFromDP(int** dp, string str1, string str2, int x, int y, int gapPenalty, bool local)
+{
+    // Constructing respective strings
+    stack<char> seq1, seq2;
+    char gap = '-';
+
+    while (!(x == 0 || y == 0))
+    {
+        if (local && dp[x][y] < 0) break;
+        
+        if (dp[x][y] == dp[x][y-1] + gapPenalty)
+        {
+            seq1.push(gap);
+            seq2.push(str2[--y]);
+        }
+        else if (dp[x][y] == dp[x-1][y] + gapPenalty)
+        {
+            seq1.push(str1[--x]);
+            seq2.push(gap);
+        }
+        else
+        {
+            seq1.push(str1[--x]);
+            seq2.push(str2[--y]);
+        }
+    }
+
+    if (!local)
+    {
+        while (x > 0)
+        {
+            seq1.push(str1[--x]);
+            seq2.push(gap);
+        }
+        while (y > 0)
+        {
+            seq1.push(gap);
+            seq2.push(str2[--y]);
+    }
+    }
+
+    while (!seq1.empty())
+    {
+        cout << seq1.top();
+        seq1.pop();
+    }
+    cout << endl;
+    while (!seq2.empty())
+    {
+        cout << seq2.top();
+        seq2.pop();
+    }
+    cout << endl;
+}
+
 int globalAlignment(string str1, string str2, int matchScore, int mismatchPenalty, int gapPenalty)
 {
     int l1 = str1.length();
@@ -30,52 +85,8 @@ int globalAlignment(string str1, string str2, int matchScore, int mismatchPenalt
         // cout << endl;
     }
 
-    // Constructing respective strings
-    stack<char> seq1, seq2;
-    int x = l1, y = l2;
-    char gap = '-';
-
-    while (!(x == 0 || y == 0))
-    {
-        if (dp[x][y] == dp[x][y-1] + gapPenalty)
-        {
-            seq1.push(gap);
-            seq2.push(str2[y--]);
-        }
-        else if (dp[x][y] == dp[x-1][y] + gapPenalty)
-        {
-            seq1.push(str1[x--]);
-            seq2.push(gap);
-        }
-        else
-        {
-            seq1.push(str1[x--]);
-            seq2.push(str2[y--]);
-        }
-    }
-    while (x >= 0)
-    {
-        seq1.push(str1[x--]);
-        seq2.push(gap);
-    }
-    while (y >= 0)
-    {
-        seq1.push(gap);
-        seq2.push(str2[y--]);
-    }
-
-    while (!seq1.empty())
-    {
-        cout << seq1.top();
-        seq1.pop();
-    }
-    cout << endl;
-    while (!seq2.empty())
-    {
-        cout << seq2.top();
-        seq2.pop();
-    }
-    cout << endl;
+    cout << "Global Alignment: " << endl;
+    showStringFromDP(dp, str1, str2, l1, l2, gapPenalty, false);
 
     int ans = dp[l1][l2];
     for (int i = 0; i <= l1; i++) delete[] dp[i];
@@ -84,7 +95,7 @@ int globalAlignment(string str1, string str2, int matchScore, int mismatchPenalt
     return ans;
 }
 
-int localLength(string str1, string str2, int matchScore)
+int localLength(string str1, string str2, int matchScore, int mismatchPenalty, int gapPenalty)
 {
     int l1 = str1.length();
     int l2 = str2.length();
@@ -99,26 +110,26 @@ int localLength(string str1, string str2, int matchScore)
             if (str1[i-1] == str2[j-1])
             {
                 dp[i][j] = dp[i-1][j-1] + matchScore;
+                if (dp[i-1][j-1] == -1) dp[i][j]++;
 
-                if (dp[i][j] > dp[x][y])
+                if (dp[i][j] >= dp[x][y])
                 {
                     x = i;
                     y = j;
                 }
             }
-            // else dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            else
+            {
+                dp[i][j] = max({dp[i-1][j-1] + mismatchPenalty, dp[i-1][j] + gapPenalty, dp[i][j-1] + gapPenalty, -1});
+            }
             // cout << dp[i][j] << " ";
         }
         // cout << endl;
     }
 
     int score = dp[x][y];
-    int l = score / matchScore;
     cout << "Local alignment: " << endl;
-    for (int i = 0; i < l; i++) cout << str1[x - l + i];
-    cout << endl;
-    for (int i = 0; i < l; i++) cout << str2[y - l + i];
-    cout << endl;
+    showStringFromDP(dp, str1, str2, x, y, gapPenalty, true);
 
     for (int i = 0; i <= l1; i++) delete[] dp[i];
     delete[] dp;
@@ -147,7 +158,7 @@ int main()
     cout << "Maximum score: " << globalScore << endl;
 
     cout << endl;
-    int localScore = localLength(str1, str2, matchScore);
+    int localScore = localLength(str1, str2, matchScore, mismatchPenalty, gapPenalty);
     cout << "Maximum score: " << localScore << endl;
 }
 
@@ -160,9 +171,9 @@ CGAAGTT
 
 AASASAS
 ASHJHGHQSDSD
-2
+1
 -1
--1
+-2
 
 AGTACG
 GTTCAG
