@@ -64,8 +64,8 @@ int globalAlignment(string str1, string str2, int matchScore, int mismatchPenalt
     int** dp = new int*[l1+1];
     for (int i = 0; i <= l1; i++) dp[i] = new int[l2+1];
 
-    for (int i = 0; i < l1; i++) dp[i][0] = i * gapPenalty;
-    for (int i = 0; i < l2; i++) dp[0][i] = i * gapPenalty;
+    for (int i = 0; i <= l1; i++) dp[i][0] = i * gapPenalty;
+    for (int i = 0; i <= l2; i++) dp[0][i] = i * gapPenalty;
 
     for (int i = 1; i <= l1; i++)
     {
@@ -143,9 +143,13 @@ int main()
     int matchScore, mismatchPenalty, gapPenalty;
 
     cout << "Enter first sequence: ";
-    cin >> str1;
+    // cin >> str1;
+    getline(cin, str1);
+    for (int i = 0; i < str1.length(); i++) str1[i] = toupper(str1[i]);
     cout << "Enter second sequence: ";
-    cin >> str2;
+    // cin >> str2;
+    getline(cin, str2);
+    for (int i = 0; i < str2.length(); i++) str2[i] = toupper(str2[i]);
     cout << "Enter match score: ";
     cin >> matchScore;
     cout << "Enter mismatch penalty: ";
