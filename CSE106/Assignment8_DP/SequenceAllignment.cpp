@@ -53,8 +53,16 @@ int globalAlignment(string str1, string str2, int matchScore, int mismatchPenalt
             seq2.push(str2[y--]);
         }
     }
-    while (x >= 0) seq1.push(str1[x--]);
-    while (y >= 0) seq2.push(str2[y--]);
+    while (x >= 0)
+    {
+        seq1.push(str1[x--]);
+        seq2.push(gap);
+    }
+    while (y >= 0)
+    {
+        seq1.push(gap);
+        seq2.push(str2[y--]);
+    }
 
     while (!seq1.empty())
     {
@@ -155,4 +163,10 @@ ASHJHGHQSDSD
 2
 -1
 -1
+
+AGTACG
+GTTCAG
+2
+-1
+-2
 */
