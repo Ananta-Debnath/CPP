@@ -57,6 +57,11 @@ private:
         }
     }
 
+    void buildMaxHeap()
+    {
+        for (int i = length/2; i > 0; i++) maxHeapify(i);
+    }
+
 public:
     Heap(int size = 2)
     {
@@ -71,7 +76,7 @@ public:
         capacity = v.size() + 1;
         array = new int[capacity];
 
-        for (int x : v) insert(x);
+        for (int x : v) insert(x); // Heapify from length / 2 to 1
     }
 
     ~Heap()

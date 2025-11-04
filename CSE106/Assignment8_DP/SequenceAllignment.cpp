@@ -79,10 +79,10 @@ int globalAlignment(string str1, string str2, int matchScore, int mismatchPenalt
             {
                 dp[i][j] = max({dp[i-1][j-1] + mismatchPenalty, dp[i-1][j] + gapPenalty, dp[i][j-1] + gapPenalty});
             }
-            // if (dp[i][j] >= 0) cout << "+";
-            // cout << dp[i][j] << " ";
+            if (dp[i][j] >= 0) cout << "+";
+            cout << dp[i][j] << " ";
         }
-        // cout << endl;
+        cout << endl;
     }
 
     cout << "Global Alignment: " << endl;
