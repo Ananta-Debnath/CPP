@@ -16,15 +16,13 @@ int main()
     vector<Edge> edges(m);
 
     int u, v, w;
-    int sum = 0;
     for (int i = 0; i < m; i++)
     {
         cin >> u >> v >> w;
         edges.push_back(Edge(u, v, w));
-        sum += w;
     }
     
-    vector<int> d(n+1, sum), d_n(n+1, sum), par(n+1);
+    vector<int> d(n+1, INT_MAX), d_n(n+1, INT_MAX), par(n+1);
     d_n[1] = 0;
 
     for (int i = 0; i < n; i++)
@@ -67,4 +65,6 @@ int main()
         }
     }
     else cout << -1 << endl;
+
+    return 0;
 }
