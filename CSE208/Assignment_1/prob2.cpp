@@ -15,41 +15,39 @@ int main()
 
     vector<Edge> edges(m);
 
-    int u, v, w;
+    int sum = 0;
     for (int i = 0; i < m; i++)
     {
+        int u, v, w;
         cin >> u >> v >> w;
-        edges.push_back(Edge(u, v, w));
+        edges[i] = Edge(u, v, w);
+        if (w > 0) sum += w;
     }
     
-    vector<int> d(n+1, INT_MAX), d_n(n+1, INT_MAX), par(n+1);
-    d_n[1] = 0;
+    vector<int> dist(n+1, sum), par(n+1);
+    dist[1] = 0;
 
+    int idx;
     for (int i = 0; i < n; i++)
     {
+        idx = -1;
         for (Edge e : edges)
         {
-            d = d_n;
-            if (d[e.u] + e.w < d[e.v])
+            if ((dist[e.u] + e.w) < dist[e.v])
             {
-                d_n[e.v] = d[e.u] + e.w;
+                dist[e.v] = dist[e.u] + e.w;
                 par[e.v] = e.u;
+                idx = e.v;
             }
         }
-    }
-
-    int idx = -1;
-    for (int i = 0; i < n; i++)
-    {
-        if (d[i] != d_n[i])
-        {
-            idx = i;
-            break;
-        }
+        // for (int d : dist) cout << d << ' ';
+        // cout << endl;
     }
 
     if (idx != -1)
     {
+        for (int i = 0; i < n; i++) idx = par[idx];
+
         int org = idx = par[idx];
         stack<int> s;
         do 
