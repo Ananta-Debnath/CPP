@@ -23,12 +23,22 @@ vector<vector<long long>> floydWarshall(int n, const vector<vector<long long>>& 
     return dist;
 }
 
+void printMatrix(vector<vector<long long>> mat)
+{
+    for (vector<long long> row : mat)
+    {
+        for (long long x : row) cout << x << ' ';
+        cout << '\n';
+    }
+}
+
 int main()
 {
     int n, m, q;
     cin >> n >> m >> q;
 
     vector<vector<long long>> adjMat(n, vector<long long>(n, INF));
+    for (int i = 0; i < n; i++) adjMat[i][i] = 0;
 
     long long a, b, c;
     for (int i = 0; i < m; i++)
@@ -36,23 +46,13 @@ int main()
         cin >> a >> b >> c;
         a--;
         b--;
-        adjMat[a][b] = c;
-        adjMat[b][a] = c;
+        if (c < adjMat[a][b]) adjMat[a][b] = c;
+        if (c < adjMat[b][a]) adjMat[b][a] = c;
     }
 
-    for (vector<long long> row : adjMat)
-    {
-        for (long long w : row) cout << w << ' ';
-        cout << '\n';
-    }
-
+    // printMatrix(adjMat);
     vector<vector<long long>> dist = floydWarshall(n, adjMat);
-
-    for (vector<long long> row : dist)
-    {
-        for (long long w : row) cout << w << ' ';
-        cout << '\n';
-    }
+    // printMatrix(dist);
 
     for (int i = 0; i < q; i++)
     {
@@ -62,6 +62,7 @@ int main()
 
         if (dist[a][b] < INF) cout << dist[a][b];
         else cout << -1;
-        cout << "\n\n";
+        cout << '\n';
+        // cout << '\n';
     }
 }
