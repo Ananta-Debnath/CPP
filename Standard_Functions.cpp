@@ -72,8 +72,8 @@ BFSResult bfs(const vector<vector<int>>& g, int start)
     result.distance[start] = 0;
     while (!q.empty())
     {
-        for (int p : result.parent) cout << p << ' ';
-        cout << endl;
+        // for (int p : result.parent) cout << p << ' ';
+        // cout << endl;
 
         int u = q.front();
         for (int x : g[u])
@@ -91,25 +91,75 @@ BFSResult bfs(const vector<vector<int>>& g, int start)
     return result;
 }
 
-vector<int> connectedComponents(const vector<vector<int>>& g) // dunno where it got stuck
+vector<int> connectedComponents(const vector<vector<int>>& g)
 {
     int n = g.size();
     int compNum = 0;
     vector<int> componentId(n, -1);
-    int connected = 0;
 
     for (int i = 0; i < n; i++)
     {
-        BFSResult res;
-        if (componentId[i] == -1) res = bfs(g, i);
-
-        for (int i = 0; i < n; i++)
+        if (componentId[i] == -1)
         {
-            if (res.distance[i] != -1) componentId[i] = compNum;
+            BFSResult res = bfs(g, i);
+            
+            for (int j = 0; j < n; j++)
+            {
+                if (res.distance[j] != -1 && componentId[j] == -1)
+                {
+                    componentId[j] = compNum;
+                }
+            }
+            compNum++;
         }
     }
-    
+
     return componentId;
+}
+
+struct DijkstraResult {
+    vector<long long> distance;
+    vector<int> parent;
+};
+
+DijkstraResult dijkstra(int n, const vector<vector<pair<int, long long>>>& graph, int source)
+{
+    DijkstraResult res;
+    for (int i = 0; i <= n; i++)
+    {
+        res.distance.push_back(INF);
+        res.parent.push_back(-1);
+    }
+    priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
+    res.distance[source] = 0;
+    res.parent[source] = -1;
+    pq.emplace(0, source);
+
+    while (!pq.empty())
+    {
+        pair<long long,int> top = pq.top();
+        pq.pop();
+
+        long long d = top.first;
+        int u = top.second;
+
+        if (d > res.distance[u]) continue;
+
+        for (pair<int, long long> p : graph[u])
+        {
+            int v = p.first;
+            long long w = p.second;
+
+            if (res.distance[u] + w < res.distance[v])
+            {
+                res.distance[v] = res.distance[u] + w;
+                res.parent[v] = u;
+                pq.emplace(res.distance[v], v);
+            }
+        }
+    }
+
+    return res;
 }
 
 struct BellmanFordResult {
@@ -170,25 +220,43 @@ vector<vector<long long>> floydWarshall(int n, const vector<vector<long long>>& 
 
  
 // ----------------- MAIN FUNCTION connectedComponents -----------------
-int main() {
-    // Example graph (undirected)
+int main()
+{
+    // Create a graph with multiple connected components
+    // Component 0: nodes {0, 1, 2}
+    // Component 1: nodes {3, 4}
+    // Component 2: node {5} (isolated)
+    
     int n = 6;
     vector<vector<int>> graph(n);
-    graph[0] = {1};
-    graph[1] = {0};
-    graph[2] = {};
-    graph[3] = {4};
-    graph[4] = {3};
-    graph[5] = {};
-
-    // Compute connected components
-    vector<int> componentId = connectedComponents(graph);
-
+    
+    // Component 0: 0-1-2 triangle
+    graph[0].push_back(1);
+    graph[0].push_back(2);
+    graph[1].push_back(0);
+    graph[1].push_back(2);
+    graph[2].push_back(0);
+    graph[2].push_back(1);
+    
+    // Component 1: 3-4 edge
+    graph[3].push_back(4);
+    graph[4].push_back(3);
+    
+    // Node 5 is isolated (Component 2)
+    
+    // Find connected components
+    vector<int> components = connectedComponents(graph);
+    
     // Output results
-    cout << "Vertex\tComponentID\n";
-    for (int v = 0; v < n; ++v) {
-        cout << v << "\t" << componentId[v] << "\n";
+    cout << "Node\tComponent ID\n";
+    cout << "----\t------------\n";
+    for (int i = 0; i < n; i++) {
+        cout << i << "\t" << components[i] << "\n";
     }
-
+    
+    // Count number of components
+    set<int> uniqueComponents(components.begin(), components.end());
+    cout << "\nTotal components: " << uniqueComponents.size() << "\n";
+    
     return 0;
 }

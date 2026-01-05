@@ -29,8 +29,8 @@ int main()
 
         for (pair<int, int> p : adj[u])
         {
-            int v = p.first; 
-            int w = p.second; 
+            int v = p.first;
+            int w = p.second;
 
             // Not using coupon
             if (dist[u] + w < dist[v]) {
