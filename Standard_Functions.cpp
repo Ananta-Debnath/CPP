@@ -52,6 +52,12 @@ vector<int> dfs(const vector<vector<int>>& g, int start)
     return parents;
 }
 
+void printDFSParents(const vector<int>& parents) {
+    cout << "DFS Parent Array:\n";
+    for (size_t i = 0; i < parents.size(); ++i)
+        cout << "Node " << i << ": " << parents[i] << '\n';
+}
+
 struct BFSResult {
     vector<int> distance;   // shortest path length in edges
     vector<int> parent;     // shortest-path tree
@@ -91,6 +97,15 @@ BFSResult bfs(const vector<vector<int>>& g, int start)
     return result;
 }
 
+void printBFSResult(const BFSResult& res) {
+    cout << "BFS Distances:\n";
+    for (size_t i = 0; i < res.distance.size(); ++i)
+        cout << "Node " << i << ": " << res.distance[i] << '\n';
+    cout << "BFS Parents:\n";
+    for (size_t i = 0; i < res.parent.size(); ++i)
+        cout << "Node " << i << ": " << res.parent[i] << '\n';
+}
+
 vector<int> connectedComponents(const vector<vector<int>>& g)
 {
     int n = g.size();
@@ -115,6 +130,12 @@ vector<int> connectedComponents(const vector<vector<int>>& g)
     }
 
     return componentId;
+}
+
+void printConnectedComponents(const vector<int>& components) {
+    cout << "Connected Components:\n";
+    for (size_t i = 0; i < components.size(); ++i)
+        cout << "Node " << i << ": Component " << components[i] << '\n';
 }
 
 struct DijkstraResult {
@@ -162,6 +183,15 @@ DijkstraResult dijkstra(int n, const vector<vector<pair<int, long long>>>& graph
     return res;
 }
 
+void printDijkstraResult(const DijkstraResult& res) {
+    cout << "Dijkstra Distances:\n";
+    for (size_t i = 0; i < res.distance.size(); ++i)
+        cout << "Node " << i << ": " << res.distance[i] << '\n';
+    cout << "Dijkstra Parents:\n";
+    for (size_t i = 0; i < res.parent.size(); ++i)
+        cout << "Node " << i << ": " << res.parent[i] << '\n';
+}
+
 struct BellmanFordResult {
     vector<long long> dist;
     vector<int> parent;
@@ -199,6 +229,16 @@ BellmanFordResult bellmanFord(int n, const vector<Edge>& edges, int source)
     return res;
 }
 
+void printBellmanFordResult(const BellmanFordResult& res) {
+    cout << "Bellman-Ford Distances:\n";
+    for (size_t i = 0; i < res.dist.size(); ++i)
+        cout << "Node " << i << ": " << res.dist[i] << '\n';
+    cout << "Bellman-Ford Parents:\n";
+    for (size_t i = 0; i < res.parent.size(); ++i)
+        cout << "Node " << i << ": " << res.parent[i] << '\n';
+    cout << "Has Negative Cycle: " << (res.hasNegativeCycle ? "Yes" : "No") << '\n';
+}
+
 vector<vector<long long>> floydWarshall(int n, const vector<vector<long long>>& adjMat)
 {
     vector<vector<long long>> dist(adjMat);
@@ -218,7 +258,19 @@ vector<vector<long long>> floydWarshall(int n, const vector<vector<long long>>& 
     return dist;
 }
 
- 
+void printFloydWarshall(const vector<vector<long long>>& dist) {
+    cout << "Floyd-Warshall Distance Matrix:\n";
+    for (size_t i = 0; i < dist.size(); ++i) {
+        for (size_t j = 0; j < dist[i].size(); ++j) {
+            if (dist[i][j] >= INF)
+                cout << "INF ";
+            else
+                cout << dist[i][j] << " ";
+        }
+        cout << '\n';
+    }
+}
+
 // ----------------- MAIN FUNCTION connectedComponents -----------------
 int main()
 {
@@ -226,10 +278,10 @@ int main()
     // Component 0: nodes {0, 1, 2}
     // Component 1: nodes {3, 4}
     // Component 2: node {5} (isolated)
-    
+
     int n = 6;
     vector<vector<int>> graph(n);
-    
+
     // Component 0: 0-1-2 triangle
     graph[0].push_back(1);
     graph[0].push_back(2);
