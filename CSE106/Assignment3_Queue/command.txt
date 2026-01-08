@@ -1,3 +1,0 @@
-g++ -std=c++11 main.cpp arrayqueue.cpp listqueue.cpp -o main
-
-g++ randomtester.cpp arrayqueue.cpp listqueue.cpp -o randomtester
