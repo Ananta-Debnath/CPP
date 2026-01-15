@@ -13,6 +13,50 @@ public:
     Edge(int u = 0, int v = 0, long long w = 0) : u(u), v(v), w(w) {}
 };
 
+class DisjointSetUnion
+{
+private:
+    vector<int> parent;
+    vector<int> size;
+
+public:
+    DisjointSetUnion(int n = 0)
+    {
+        parent.resize(n);
+        size.resize(n, 1);
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+
+    int find(int x)
+    {
+        if (parent[x] == x) return x;
+        else
+        {
+            parent[x] = find(parent[x]);
+            return parent[x];
+        }
+    }
+
+    void join(int x, int y)
+    {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX == rootY) return;
+
+        if (size[rootX] < size[rootY])
+        {
+            parent[rootX] = rootY;
+            size[rootY] += size[rootX];
+        }
+        else
+        {
+            parent[rootY] = rootX;
+            size[rootX] += size[rootY];
+        }
+    }
+};
+
 
 vector<int> dfs(const vector<vector<int>>& g, int start)
 {
@@ -272,9 +316,9 @@ void printFloydWarshall(const vector<vector<long long>>& dist) {
     }
 }
 
-vector<tuple<int, int, long long>> prim(const vector<vector<pair<int, long long>>>& graph, int source = 0)
+vector<Edge> prim(const vector<vector<pair<int, long long>>>& graph, int source = 0)
 {
-    vector<tuple<int, int, long long>> mst;
+    vector<Edge> mst;
     int n = graph.size();
     // tuple <weight, from, to>
     priority_queue<tuple<long long, int, int>, vector<tuple<long long, int, int>>, greater<tuple<long long, int, int>>> pq;
@@ -290,7 +334,7 @@ vector<tuple<int, int, long long>> prim(const vector<vector<pair<int, long long>
         if (!visited[v])
         {
             visited[v] = true;
-            mst.push_back({u, v, w});
+            mst.push_back(Edge(u, v, w));
 
             for (auto p : graph[v])
             {
@@ -302,15 +346,46 @@ vector<tuple<int, int, long long>> prim(const vector<vector<pair<int, long long>
     return mst;
 }
 
-void printPrimResult(const vector<tuple<int, int, long long>>& mst) {
+void printPrimResult(const vector<Edge>& mst) {
+    long long totalWeight = 0;
+    for (auto e : mst) totalWeight += e.w;
+
+    cout << "Total Weight: " << totalWeight << '\n';
     cout << "Prim's MST Edges (u, v, w):\n";
-    for (const auto& edge : mst) {
-        int u, v;
-        long long w;
-        tie(u, v, w) = edge;
-        cout << u << " - " << v << " : " << w << '\n';
-    }
+    for (const auto& edge : mst) cout << edge.u << " - " << edge.v << " : " << edge.w << '\n';
 }
+
+vector<Edge> kruskal(int n, const vector<Edge>& graph)
+{
+    vector<Edge> mst;
+    DisjointSetUnion dsu(n);
+
+    vector<Edge> edges = graph;
+    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {
+        return a.w < b.w;
+    });
+
+    for (auto e : edges)
+    {
+        if (dsu.find(e.u) != dsu.find(e.v))
+        {
+            mst.push_back(e);
+            dsu.join(e.u, e.v);
+        }
+    }
+
+    return mst;
+}
+
+void printKruskalResult(const vector<Edge>& mst) {
+    long long totalWeight = 0;
+    for (auto e : mst) totalWeight += e.w;
+
+    cout << "Total Weight: " << totalWeight << '\n';
+    cout << "Kruskal's MST Edges (u, v, w):\n";
+    for (const auto& edge : mst) cout << edge.u << " - " << edge.v << " : " << edge.w << '\n';
+}
+
 
 // ----------------- MAIN FUNCTION connectedComponents -----------------
 int main()

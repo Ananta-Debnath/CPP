@@ -68,9 +68,11 @@ int main()
 
     
     // Print contents of a file if it exists
-    // if (fileInput) {
+    // if (fileInput)
+    // {
     //     string outFile = "sampleio/prims/out" + to_string(testNo) + ".txt";
-    //     if (FILE* f = fopen(outFile.c_str(), "r")) {
+    //     if (FILE* f = fopen(outFile.c_str(), "r"))
+    //     {
     //         cout << "--- Contents of " << outFile << " ---\n";
     //         char buf[256];
     //         while (fgets(buf, sizeof(buf), f)) {
@@ -80,4 +82,6 @@ int main()
     //         fclose(f);
     //     }
     // }
+    
+    return 0;
 }
