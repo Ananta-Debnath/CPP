@@ -8,8 +8,9 @@ const long long INF = numeric_limits<long long>::max()/4;
 class Edge
 {
 public:
-    int u, v, w;
-    Edge(int u = 0, int v = 0, int w = 0) : u(u), v(v), w(w) {}
+    int u, v;
+    long long w;
+    Edge(int u = 0, int v = 0, long long w = 0) : u(u), v(v), w(w) {}
 };
 
 
@@ -268,6 +269,46 @@ void printFloydWarshall(const vector<vector<long long>>& dist) {
                 cout << dist[i][j] << " ";
         }
         cout << '\n';
+    }
+}
+
+vector<tuple<int, int, long long>> prim(const vector<vector<pair<int, long long>>>& graph, int source = 0)
+{
+    vector<tuple<int, int, long long>> mst;
+    int n = graph.size();
+    // tuple <weight, from, to>
+    priority_queue<tuple<long long, int, int>, vector<tuple<long long, int, int>>, greater<tuple<long long, int, int>>> pq;
+    vector<bool> visited(n, false);
+
+    visited[source] = true;
+    for (auto p : graph[source]) pq.emplace(p.second, source, p.first);
+
+    while (!pq.empty())
+    {
+        auto [w, u, v] = pq.top();
+        pq.pop();
+        if (!visited[v])
+        {
+            visited[v] = true;
+            mst.push_back({u, v, w});
+
+            for (auto p : graph[v])
+            {
+                if (!visited[p.first]) pq.emplace(p.second, v, p.first);
+            }
+        }
+    }
+
+    return mst;
+}
+
+void printPrimResult(const vector<tuple<int, int, long long>>& mst) {
+    cout << "Prim's MST Edges (u, v, w):\n";
+    for (const auto& edge : mst) {
+        int u, v;
+        long long w;
+        tie(u, v, w) = edge;
+        cout << u << " - " << v << " : " << w << '\n';
     }
 }
 
