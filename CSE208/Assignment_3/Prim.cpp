@@ -1,6 +1,7 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <queue>
 using namespace std;
-
 
 
 vector<tuple<int, int, long long>> prim(const vector<vector<pair<int, long long>>>& graph, int source = 0)

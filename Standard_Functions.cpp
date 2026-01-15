@@ -58,10 +58,89 @@ public:
 };
 
 
-vector<int> dfs(const vector<vector<int>>& g, int start)
+
+// Convert adjacency list (vector<vector<int>>) to weighted adjacency list (vector<vector<pair<int, long long>>>)
+vector<vector<pair<int, long long>>> toWeightedAdjList(const vector<vector<int>>& g, long long defaultWeight = 1) {
+    int n = g.size();
+    vector<vector<pair<int, long long>>> wg(n);
+    for (int u = 0; u < n; ++u) {
+        for (int v : g[u]) {
+            wg[u].emplace_back(v, defaultWeight);
+        }
+    }
+    return wg;
+}
+
+// Convert weighted adjacency list to adjacency list
+vector<vector<int>> toAdjList(const vector<vector<pair<int, long long>>>& wg) {
+    int n = wg.size();
+    vector<vector<int>> g(n);
+    for (int u = 0; u < n; ++u) {
+        for (auto& p : wg[u]) {
+            g[u].push_back(p.first);
+        }
+    }
+    return g;
+}
+
+// Convert weighted adjacency list to edge list
+vector<Edge> toEdgeList(const vector<vector<pair<int, long long>>>& wg) {
+    int n = wg.size();
+    vector<Edge> edges;
+    for (int u = 0; u < n; ++u) {
+        for (auto& p : wg[u]) {
+            int v = p.first;
+            long long w = p.second;
+            edges.emplace_back(u, v, w);
+        }
+    }
+    return edges;
+}
+
+// Convert edge list to weighted adjacency list
+vector<vector<pair<int, long long>>> edgeListToWeightedAdjList(int n, const vector<Edge>& edges) {
+    vector<vector<pair<int, long long>>> wg(n);
+    for (const auto& e : edges) {
+        wg[e.u].emplace_back(e.v, e.w);
+    }
+    return wg;
+}
+
+// Convert adjacency matrix to weighted adjacency list
+vector<vector<pair<int, long long>>> adjMatToWeightedAdjList(const vector<vector<long long>>& mat) {
+    int n = mat.size();
+    vector<vector<pair<int, long long>>> wg(n);
+    for (int u = 0; u < n; ++u) {
+        for (int v = 0; v < n; ++v) {
+            if (mat[u][v] < INF)
+                wg[u].emplace_back(v, mat[u][v]);
+        }
+    }
+    return wg;
+}
+
+// Convert weighted adjacency list to adjacency matrix
+vector<vector<long long>> weightedAdjListToAdjMat(const vector<vector<pair<int, long long>>>& wg, int n) {
+    vector<vector<long long>> mat(n, vector<long long>(n, INF));
+    for (int u = 0; u < n; ++u) {
+        for (auto& p : wg[u]) {
+            mat[u][p.first] = p.second;
+        }
+    }
+    return mat;
+}
+
+
+struct DFSResult {
+    vector<int> parent;
+    vector<int> order;
+};
+
+DFSResult dfs(const vector<vector<int>>& g, int start)
 {
     int n = g.size();
-    vector<int> parents(n, -1);
+    DFSResult res;
+    res.parent.resize(n, -1);
     stack<int> s;
     s.push(start);
     while (true)
@@ -70,10 +149,10 @@ vector<int> dfs(const vector<vector<int>>& g, int start)
         {
             for (int i = 0; i < n; i++)
             {
-                if (parents[i] == -1)
+                if (res.parent[i] == -1)
                 {
                     s.push(i);
-                    parents[i] = i;
+                    res.parent[i] = i;
                     break;
                 }
             }
@@ -84,23 +163,43 @@ vector<int> dfs(const vector<vector<int>>& g, int start)
         int u = s.top();
         for (int x : g[u])
         {
-            if (parents[x] == -1)
+            if (res.parent[x] == -1)
             {
                 s.push(x);
-                parents[x] = u;
+                res.parent[x] = u;
                 break;
             }
         }
-        if (s.top() == u) s.pop();
+        if (s.top() == u)
+        {
+            res.order.push_back(u);
+            s.pop();
+        }
     }
 
-    return parents;
+    return res;
 }
 
-void printDFSParents(const vector<int>& parents) {
+void printDFSResult(const DFSResult& res) {
     cout << "DFS Parent Array:\n";
-    for (size_t i = 0; i < parents.size(); ++i)
-        cout << "Node " << i << ": " << parents[i] << '\n';
+    for (size_t i = 0; i < res.parent.size(); ++i)
+        cout << "Node " << i << ": " << res.parent[i] << '\n';
+    cout << "DFS Postorder (for Topo): ";
+    for (auto x : res.order) cout << x << ' ';
+    cout << '\n';
+}
+
+vector<int> topoSort(const vector<vector<int>>& g) {
+    DFSResult res = dfs(g, 0); // or run dfs for all unvisited nodes if graph is not connected
+    vector<int> topo = res.order;
+    reverse(topo.begin(), topo.end());
+    return topo;
+}
+
+void printTopoOrder(const vector<int>& order) {
+    cout << "Topological Order: ";
+    for (auto x : order) cout << x << ' ';
+    cout << '\n';
 }
 
 struct BFSResult {
