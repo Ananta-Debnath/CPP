@@ -58,6 +58,32 @@ public:
 };
 
 
+template<typename T>
+pair<vector<int>, unordered_map<T, int>> coordinate_compress(const vector<T>& v) {
+    vector<T> sorted = v;
+    sort(sorted.begin(), sorted.end());
+    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end());
+    unordered_map<T, int> mapping;
+    for (int i = 0; i < (int)sorted.size(); ++i) mapping[sorted[i]] = i;
+    vector<int> compressed;
+    for (const T& x : v) compressed.push_back(mapping[x]);
+    return {compressed, mapping};
+}
+
+// Coordinate Compression Use
+// vector<int> arr = {100, 500, 100, 1000000, 500, 42};
+//
+// // Compress coordinates
+// auto [compressed, mapping] = coordinate_compress(arr);
+//
+// // Now compressed = {1, 2, 1, 3, 2, 0}
+// // mapping = {42:0, 100:1, 500:2, 1000000:3}
+//
+// // You can now use compressed as indices in a Fenwick Tree or segment tree of size 4 (not 1,000,000+)
+// vector<int> bit(mapping.size(), 0);
+// for (int idx : compressed) {
+//     bit[idx]++; // count occurrences, for example
+// }
 
 // Convert adjacency list (vector<vector<int>>) to weighted adjacency list (vector<vector<pair<int, long long>>>)
 vector<vector<pair<int, long long>>> toWeightedAdjList(const vector<vector<int>>& g, long long defaultWeight = 1) {
@@ -128,6 +154,39 @@ vector<vector<long long>> weightedAdjListToAdjMat(const vector<vector<pair<int, 
         }
     }
     return mat;
+}
+
+
+// Print adjacency matrix
+template<typename T>
+void printAdjMat(const vector<vector<T>>& mat) {
+    cout << "Adjacency Matrix:\n";
+    for (const auto& row : mat) {
+        for (const auto& val : row) {
+            cout << val << ' ';
+        }
+        cout << '\n';
+    }
+}
+
+// Print adjacency list (unweighted)
+void printAdjList(const vector<vector<int>>& g) {
+    cout << "Adjacency List:\n";
+    for (size_t u = 0; u < g.size(); ++u) {
+        cout << u << ": ";
+        for (int v : g[u]) cout << v << ' ';
+        cout << '\n';
+    }
+}
+
+// Print adjacency list (weighted)
+void printWeightedAdjList(const vector<vector<pair<int, long long>>>& g) {
+    cout << "Weighted Adjacency List:\n";
+    for (size_t u = 0; u < g.size(); ++u) {
+        cout << u << ": ";
+        for (auto [v, w] : g[u]) cout << "(" << v << ", " << w << ") ";
+        cout << '\n';
+    }
 }
 
 
@@ -211,11 +270,9 @@ BFSResult bfs(const vector<vector<int>>& g, int start)
 {
     int n = g.size();
     BFSResult result;
-    for (int i = 0; i < n; i++)
-    {
-        result.distance.push_back(-1);
-        result.parent.push_back(-1);
-    }
+    result.distance.resize(n, -1);
+    result.parent.resize(n, -1);
+    
     queue<int> q;
     q.push(start);
     // result.parent[start] = start;
