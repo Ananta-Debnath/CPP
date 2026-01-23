@@ -298,6 +298,38 @@ BFSResult bfs(const vector<vector<int>>& g, int start)
     return result;
 }
 
+BFSResult bfsAdjMat(const vector<vector<long long>>& g, int start)
+{
+    int n = g.size();
+    BFSResult result;
+    result.distance.resize(n, -1);
+    result.parent.resize(n, -1);
+    
+    queue<int> q;
+    q.push(start);
+    result.parent[start] = start;
+    result.distance[start] = 0;
+    while (!q.empty())
+    {
+        // for (int p : result.parent) cout << p << ' ';
+        // cout << endl;
+
+        int u = q.front();
+        for (int i = 0; i < n; i++)
+        {
+            if (g[u][i] > 0 && result.parent[i] == -1)
+            {
+                q.push(i);
+                result.parent[i] = u;
+                result.distance[i] = result.distance[u] + 1;
+            }
+        }
+        q.pop();
+    }
+
+    return result;
+}
+
 void printBFSResult(const BFSResult& res) {
     cout << "BFS Distances:\n";
     for (size_t i = 0; i < res.distance.size(); ++i)
@@ -540,6 +572,78 @@ void printKruskalResult(const vector<Edge>& mst) {
     cout << "Total Weight: " << totalWeight << '\n';
     cout << "Kruskal's MST Edges (u, v, w):\n";
     for (const auto& edge : mst) cout << edge.u << " - " << edge.v << " : " << edge.w << '\n';
+}
+
+struct MaxFlowResult
+{
+    long long maxFlow;
+    vector<Edge> flow;
+};
+
+MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& graph, int s, int t)
+{
+    vector<vector<long long>> g = graph;
+    MaxFlowResult res;
+    res.maxFlow = 0;
+
+    // printAdjMat(g, "Capacity Graph");
+    // cout << '\n';
+
+    while (true)
+    {
+        BFSResult path = bfsAdjMat(g, s);
+
+        if (path.parent[t] == -1) break;
+
+        long long minFlow = INT_MAX;
+        int node = t;
+        while (node != s)
+        {
+            int par = path.parent[node];
+            minFlow = min(minFlow, g[par][node]);
+            node = par;
+        }
+        res.maxFlow += minFlow;
+        // cout << minFlow << '\n';
+
+        node = t;
+        while (node != s)
+        {
+            int par = path.parent[node];
+            // cout << par << ' ' << node << '\n';
+
+            g[par][node] -= minFlow;
+            g[node][par] += minFlow;
+
+            node = par;
+        }
+        // printAdjMat(g, "Capacity Graph");
+        // cout << '\n';
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (graph[i][j] >= 0)
+            {
+                int flow = graph[i][j] - g[i][j];
+                // f = max(0, f);
+                res.flow.push_back(Edge(i, j, flow));
+            }
+        }
+    }
+
+    return res;
+}
+
+void printMaxFlowResult(const MaxFlowResult& res) {
+    cout << "Max Flow: " << res.maxFlow << '\n';
+    cout << "Flow along edges (u, v, flow):\n";
+    for (const auto& e : res.flow) {
+        if (e.w > 0) // Only print positive flows
+            cout << e.u << " -> " << e.v << " : " << e.w << '\n';
+    }
 }
 
 
