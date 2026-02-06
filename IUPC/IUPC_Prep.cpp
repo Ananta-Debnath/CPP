@@ -51,6 +51,25 @@ void fastIO() {
     cout.tie(NULL);
 }
 
+// ==================== MAIN ====================
+void solve() {
+    // Your solution here
+    
+}
+
+int main() {
+    fastIO();
+    // precompute_factorials(); // Uncomment if using nCr
+
+    int t = 1;
+    // cin >> t; // Uncomment for multiple test cases
+    while (t--) {
+        solve();
+    }
+
+    return 0;
+}
+
 // ==================== DEBUG ====================
 #ifdef LOCAL
 #define dbg(x) cerr << #x << " = " << x << endl
@@ -84,6 +103,16 @@ ll modInverse(ll a, ll mod = MOD) { return power(a, mod - 2, mod); }
 ll add(ll a, ll b, ll mod = MOD) { return ((a % mod) + (b % mod)) % mod; }
 ll sub(ll a, ll b, ll mod = MOD) { return ((a % mod) - (b % mod) + mod) % mod; }
 ll mul(ll a, ll b, ll mod = MOD) { return ((a % mod) * (b % mod)) % mod; }
+
+//  Extended Euclidean Algorithm (for modular inverse when mod not prime)
+ll ext_gcd(ll a, ll b, ll &x, ll &y) {
+    if (b == 0) { x = 1; y = 0; return a; }
+    ll x1, y1;
+    ll g = ext_gcd(b, a % b, x1, y1);
+    x = y1;
+    y = x1 - (a / b) * y1;
+    return g;
+}
 
 // ==================== SIEVE OF ERATOSTHENES ====================
 vector<bool> sieve(int n) {
@@ -120,6 +149,29 @@ vector<pll> primeFactors(ll n) {
     return factors;
 }
 
+vector<int> build_spf(int N) {
+    vector<int> spf(N, 0);
+    for (int i = 2; i < N; i++) {
+        if (spf[i] == 0) {
+            spf[i] = i;
+            for (int j = i; j < N; j += i) {
+                if (spf[j] == 0)
+                    spf[j] = i;
+            }
+        }
+    }
+    return spf;
+}
+//  Prime Factorization using SPF (O(log n) per query)
+vector<int> get_prime_factors(int x, const vector<int> &spf) {
+    vector<int> factors;
+    while (x > 1) {
+        factors.pb(spf[x]);
+        x /= spf[x];
+    }
+    return factors;
+}
+
 // ==================== nCr with MOD ====================
 const int MAXN = 2e5 + 5;
 ll fact[MAXN], inv_fact[MAXN];
@@ -141,6 +193,91 @@ ll nCr(int n, int r) {
 ll nPr(int n, int r) {
     if (r < 0 || r > n) return 0;
     return mul(fact[n], inv_fact[n - r]);
+}
+
+//  Factorial & Inverse Factorial Precomputation (modular combinatorics)
+vector<ll> build_fact(int N, ll mod) {
+    vector<ll> fact(N + 1, 1);
+    rep(i, 1, N + 1) fact[i] = (fact[i - 1] * i) % mod;
+    return fact;
+}
+vector<ll> build_inv_fact(const vector<ll> &fact, ll mod) {
+    int N = sz(fact) - 1;
+    vector<ll> invFact(N + 1, 1);
+    invFact[N] = modInverse(fact[N], mod);
+    repr(i, N - 1, 0) invFact[i] = (invFact[i + 1] * (i + 1)) % mod;
+    return invFact;
+}
+ll nCr_mod(ll n, ll r, const vector<ll> &fact, const vector<ll> &invFact, ll mod) {
+    if (r < 0 || r > n) return 0;
+    return fact[n] * invFact[r] % mod * invFact[n - r] % mod;
+}
+
+//  Euler’s Totient Function (phi(n))
+int phi(int n) {
+    int res = n;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            while (n % i == 0) n /= i;
+            res -= res / i;
+        }
+    }
+    if (n > 1) res -= res / n;
+    return res;
+}
+
+//  Divisor Count & Sum (O(sqrt n))
+vector<int> get_divisors(int n) {
+    vector<int> divisors;
+    for (int i = 1; i * i <= n; i++) {
+        if (n % i == 0) {
+            divisors.pb(i);
+            if (i != n / i) divisors.pb(n / i);
+        }
+    }
+    sort(all(divisors));
+    return divisors;
+}
+
+// 1️⃣0️⃣ Chinese Remainder Theorem (CRT) for pairwise coprime moduli
+// Returns (x, M) such that x % m[i] = r[i], M = product of moduli
+pair<ll, ll> crt(const vector<ll> &r, const vector<ll> &m) {
+    ll x = r[0], M = m[0];
+    rep(i, 1, sz(r)) {
+        ll a = x, b = M, c = r[i], d = m[i];
+        ll s, t;
+        ll g = ext_gcd(b, d, s, t);
+        if ((c - a) % g != 0) return {-1, -1}; // no solution
+        ll mod = b / g * d;
+        ll tmp = ((c - a) / g * s) % (d / g);
+        x = (a + b * tmp) % mod;
+        if (x < 0) x += mod;
+        M = mod;
+    }
+    return {x, M};
+}
+
+pair<long long, long long> crt_coprime(const vector<long long> &r, const vector<long long> &m) {
+    int n = r.size();
+
+    // Step 1: compute total modulus M
+    long long M = 1;
+    for (int i = 0; i < n; i++) {
+        M *= m[i];
+    }
+
+    // Step 2: build the solution
+    long long x = 0;
+    for (int i = 0; i < n; i++) {
+        long long Mi = M / m[i];                 // product of other moduli
+        long long inv = modInverse(Mi, m[i]);  // inverse of Mi mod m[i]
+
+        x += r[i] * Mi * inv;
+        x %= M;
+    }
+    if (x < 0) x += M;
+
+    return {x, M};
 }
 
 // ==================== DISJOINT SET UNION (DSU) ====================
@@ -583,24 +720,39 @@ bool isPowerOfTwo(ll n) { return n > 0 && (n & (n - 1)) == 0; }
 // Count set bits
 int countBits(ll n) { return __builtin_popcountll(n); }
 
-// ==================== MAIN ====================
-void solve() {
-    // Your solution here
-    
+static uint64_t splitmix64_state;
+
+uint64_t splitmix64_next(void)
+{
+    uint64_t z;
+
+    splitmix64_state += 0x9E3779B97F4A7C15ULL;
+    z = splitmix64_state;
+
+    z ^= (z >> 30);
+    z *= 0xBF58476D1CE4E5B9ULL;
+
+    z ^= (z >> 27);
+    z *= 0x94D049BB133111EBULL;
+
+    z ^= (z >> 31);
+    return z;
 }
 
-int main() {
-    fastIO();
-    // precompute_factorials(); // Uncomment if using nCr
-
-    int t = 1;
-    // cin >> t; // Uncomment for multiple test cases
-    while (t--) {
-        solve();
+struct SplitMix64Hash {
+    static uint64_t splitmix64(uint64_t x) {
+        x += 0x9e3779b97f4a7c15ULL;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;
+        return x ^ (x >> 31);
     }
 
-    return 0;
-}
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM =
+            chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
 
 /*
 ==================== QUICK REFERENCE ====================

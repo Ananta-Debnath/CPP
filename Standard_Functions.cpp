@@ -578,12 +578,13 @@ struct MaxFlowResult
 {
     long long maxFlow;
     vector<Edge> flow;
+    vector<vector<long long>> rg;
 };
 
-MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& graph, int s, int t)
+MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& g, int s, int t)
 {
-    vector<vector<long long>> g = graph;
     MaxFlowResult res;
+    res.rg = g;
     res.maxFlow = 0;
 
     // printAdjMat(g, "Capacity Graph");
@@ -591,7 +592,7 @@ MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& g
 
     while (true)
     {
-        BFSResult path = bfsAdjMat(g, s);
+        BFSResult path = bfsAdjMat(res.rg, s);
 
         if (path.parent[t] == -1) break;
 
@@ -600,7 +601,7 @@ MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& g
         while (node != s)
         {
             int par = path.parent[node];
-            minFlow = min(minFlow, g[par][node]);
+            minFlow = min(minFlow, res.rg[par][node]);
             node = par;
         }
         res.maxFlow += minFlow;
@@ -612,8 +613,8 @@ MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& g
             int par = path.parent[node];
             // cout << par << ' ' << node << '\n';
 
-            g[par][node] -= minFlow;
-            g[node][par] += minFlow;
+            res.rg[par][node] -= minFlow;
+            res.rg[node][par] += minFlow;
 
             node = par;
         }
@@ -625,9 +626,9 @@ MaxFlowResult edmondsKarpFordFulkerson(int n, const vector<vector<long long>>& g
     {
         for (int j = 0; j < n; j++)
         {
-            if (graph[i][j] >= 0)
+            if (g[i][j] >= 0)
             {
-                int flow = graph[i][j] - g[i][j];
+                int flow = g[i][j] - res.rg[i][j];
                 // f = max(0, f);
                 res.flow.push_back(Edge(i, j, flow));
             }
@@ -641,8 +642,15 @@ void printMaxFlowResult(const MaxFlowResult& res) {
     cout << "Max Flow: " << res.maxFlow << '\n';
     cout << "Flow along edges (u, v, flow):\n";
     for (const auto& e : res.flow) {
-        if (e.w > 0) // Only print positive flows
+        if (e.w > 0)
             cout << e.u << " -> " << e.v << " : " << e.w << '\n';
+    }
+    cout << "Residual Graph (matrix):\n";
+    for (const auto& row : res.rg) {
+        for (auto val : row) {
+            cout << val << ' ';
+        }
+        cout << '\n';
     }
 }
 
