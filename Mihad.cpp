@@ -13,7 +13,6 @@ int main()
 {
     int x = 2, y = 5;
 
-    swap(x, y);
 
-    cout << x << ' ' << y;
+    // cout << x << ' ' << y;
 }
