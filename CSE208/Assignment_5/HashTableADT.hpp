@@ -1,11 +1,9 @@
+#ifndef HASHTABLEADT_HPP
+#define HASHTABLEADT_HPP
+
 template <typename Key, typename Value>
 class HashTableADT
 {
-protected:
-    virtual int hash(const Key& k) const = 0;
-
-    virtual void rehash(int newSize) = 0;
-
 public:
 
     virtual ~HashTableADT() {}
@@ -24,3 +22,5 @@ public:
 
     virtual const Value* find(const Key& k) = 0; // non-const due to hit count
 };
+
+#endif

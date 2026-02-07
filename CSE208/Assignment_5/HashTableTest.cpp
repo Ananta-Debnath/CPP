@@ -2,6 +2,7 @@
 #include <set>
 #include <iomanip>
 #include "HashTableChain.hpp"
+#include "HashTableDoubleHash.hpp"
 using namespace std;
 
 char randomChar() {
@@ -29,9 +30,11 @@ int main()
     }
     cout << "Generated " << strings.size() << " unique random strings." << endl;
 
-    vector<HashTableADT<string, int>*> tables;
-    tables.push_back(new HashTableChain<string, int>(1)); // Chain method hash1
-    tables.push_back(new HashTableChain<string, int>(2)); // Chain method hash2
+    vector<pair<string, HashTableADT<string, int>*>> tables;
+    tables.push_back({"Chain Method Hash1", new HashTableChain<string, int>(1)}); // Chain method hash1
+    tables.push_back({"Chain Method Hash2", new HashTableChain<string, int>(2)}); // Chain method hash2
+    tables.push_back({"Double Hashing Hash1", new HashTableDoubleHash<string, int>(1)}); // Double hashing hash1
+    tables.push_back({"Double Hashing Hash2", new HashTableDoubleHash<string, int>(2)}); // Double hashing hash2
 
     for (auto& table : tables)
     {
@@ -39,7 +42,7 @@ int main()
         for (const auto& s : strings)
         {
             inserted++;
-            table->insert(s, inserted);
+            table.second->insert(s, inserted);
         }
         cout << "Inserted " << inserted << " words into table." << endl;
     }
@@ -50,29 +53,23 @@ int main()
         int searched = 0;
         for (const auto& s : strings)
         {
-            table->find(s);
+            table.second->find(s);
             searched++;
             if (searched == searchCount) break;
         }
         cout << "Searched " << searched << " words in table." << endl;
     }
 
-    vector<string> tableNames = {"Chain Method Hash1", "Chain Method Hash2", 
-                                 "Double Hashing Hash1", "Double Hashing Hash2", 
-                                 "Custom Probing Hash1", "Custom Probing Hash2"};
-
-    std::cout << "  HashFn | Collisions  | Avg Hits\n";
-    std::cout << "-------------------------------------\n";
+    std::cout << "     HashFunction    |  Collisions  |   Avg Hits\n";
+    std::cout << "------------------------------------------------\n";
     for (size_t i = 0; i < tables.size(); ++i) {
-        std::cout << std::setw(8) << tableNames[i] << " | "
-                  << std::setw(12) << static_cast<double>(tables[i]->getCollisionCount()) / n << " | "
+        std::cout << std::setw(20) << tables[i].first << " | "
+                  << std::setw(12) << static_cast<double>(tables[i].second->getCollisionCount()) / n << " | "
                   << std::setw(10) << std::fixed << std::setprecision(2) 
-                  << static_cast<double>(tables[i]->getHitCount()) / searchCount << std::endl;
+                  << static_cast<double>(tables[i].second->getHitCount()) / searchCount << std::endl;
     }
 
-    for (auto& table : tables) {
-        delete table;
-    }
+    for (auto& table : tables) delete table.second;
     tables.clear();
 
     return 0;
