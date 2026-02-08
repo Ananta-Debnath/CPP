@@ -118,6 +118,7 @@ private:
                 }
                 else
                 {
+                    collisionCount++;
                     j++;
                     idx = doubleHash(k, j);
                 }
@@ -318,6 +319,7 @@ public:
         while (true)
         {
             auto& [key, value, state] = list[idx];
+            hitCount++;
             if (state == EMPTY) break; // Key not found
 
             else if (state == OCCUPIED && key == k)
@@ -326,7 +328,6 @@ public:
             }
             else
             {
-                hitCount++;
                 i++;
                 idx = doubleHash(k, i);
             }
