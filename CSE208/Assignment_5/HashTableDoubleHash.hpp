@@ -54,43 +54,30 @@ private:
         return candidate;
     }
 
-    int hash1(int k) const
-    {
-        return static_cast<int>(k % length[lengthIdx]);
-    }
-
-    int hash2(int k) const
-    {
-        const double A = 0.6180339887; // (sqrt(5) - 1) / 2
-        double f = fmod(k * A, 1.0);
-
-        return static_cast<int>(floor(length[lengthIdx] * f));
-    }
-
-    int auxHash(int k) const
+    int auxHash(uint64_t k) const
     {
         return R - (k % R);
     }
 
-    int hash(int k) const
+    uint64_t hash(const Key& k) const
     {
-        if (hashFunction == 1) return hash1(k);
-        else return hash2(k);
+        if (hashFunction == 1) return this->hash1(k);
+        else return this->hash2(k);
     }
 
     int doubleHash(const Key& k, int i) const
     {
-        std::hash<Key> hasher;
-        int key = std::abs(static_cast<int>(hasher(k)));
+        uint64_t h1 = hash(k);
+        int h2 = auxHash(h1);
 
-        int h1 = hash(key);
-        int h2 = auxHash(key);
+        h1 = h1 % length[lengthIdx];
         return (h1 + (i * h2)) % length[lengthIdx];
     }
 
     void rehash(int oldLength)
     {
         int newLength = length[lengthIdx];
+        R = prevPrime(length[lengthIdx]);
         // std::cout << "Rehashing to new size: " << newLength << std::endl;
 
         auto newList = new std::tuple<Key, Value, State>[newLength];
@@ -131,12 +118,12 @@ private:
         insertionsSinceRehash = 0;
         deletionsSinceRehash = 0;
         lastRehashCount = count;
-        R = prevPrime(length[lengthIdx]);
     }
 
 public:
     HashTableDoubleHash(int hashFunction = 1, int initialSize = INITIAL_SIZE)
     {
+        initialSize = nextPrime(initialSize-1);
         length.push_back(initialSize);
         lengthIdx = 0;
         count = 0;
@@ -209,6 +196,11 @@ public:
     int size() const override
     {
         return count;
+    }
+
+    int getTableSize() const override
+    {
+        return length[lengthIdx];
     }
 
     int getCollisionCount() const override

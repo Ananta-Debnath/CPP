@@ -42,26 +42,10 @@ private:
         return candidate;
     }
 
-    int hash1(int k) const
-    {
-        return static_cast<int>(k % length[lengthIdx]);
-    }
-
-    int hash2(int k) const
-    {
-        const double A = 0.6180339887; // (sqrt(5) - 1) / 2
-        double f = fmod(k * A, 1.0);
-
-        return static_cast<int>(floor(length[lengthIdx] * f));
-    }
-
     int hash(const Key& k) const
     {
-        std::hash<Key> hasher;
-        int key = std::abs(static_cast<int>(hasher(k)));
-
-        if (hashFunction == 1) return hash1(key);
-        else return hash2(key);
+        if (hashFunction == 1) return static_cast<int>(this->hash1(k) % length[lengthIdx]);
+        else return static_cast<int>(this->hash2(k) % length[lengthIdx]);
     }
 
     void rehash(int oldLength)
@@ -92,6 +76,7 @@ private:
 public:
     HashTableChain(int hashFunction = 1, int initialSize = INITIAL_SIZE)
     {
+        initialSize = nextPrime(initialSize-1);
         length.push_back(initialSize);
         lengthIdx = 0;
         count = 0;
@@ -156,6 +141,11 @@ public:
     int size() const override
     {
         return count;
+    }
+
+    int getTableSize() const override
+    {
+        return length[lengthIdx];
     }
 
     int getCollisionCount() const override

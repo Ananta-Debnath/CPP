@@ -7,12 +7,14 @@
 
 using namespace std;
 
-char randomChar() {
+char randomChar()
+{
     const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     return charset[rand() % (sizeof(charset) - 1)];
 }
 
-string randomString(int length) {
+string randomString(int length)
+{
     string result;
     for (int i = 0; i < length; ++i) {
         result += randomChar();
@@ -54,7 +56,7 @@ int main()
         // cout << "Inserted " << inserted << " words into table." << endl;
     }
 
-    int searchCount = 1000;
+    int searchCount = wordCount / 10;
     set<string> searchStrings;
     while (searchStrings.size() < searchCount)
     {
@@ -68,7 +70,8 @@ int main()
         int searched = 0;
         for (const auto& s : searchStrings)
         {
-            table.second->find(s);
+            const int* v = table.second->find(s);
+            // if (!v) cout << table.first << " Key not found: " << s << endl;
             searched++;
             if (searched == searchCount) break;
         }
@@ -77,8 +80,8 @@ int main()
 
     cout << "------------------------------------------------------------------------\n";
     cout << "|                  |          Hash1          |          Hash2          |\n";
-    cout << "------------------------------------------------------------------------\n";
-    cout << "|   HashFunction   | Collisions |  Avg Hits  | Collisions |  Avg Hits  |\n";
+    cout << "|   HashFunction   |----------------------------------------------------\n";
+    cout << "|                  | Collisions |  Avg Hits  | Collisions |  Avg Hits  |\n";
     cout << "------------------------------------------------------------------------\n";
     for (size_t i = 0; i < tables.size(); i+=2)
     {
@@ -91,6 +94,20 @@ int main()
              << static_cast<double>(tables[i+1].second->getHitCount()) / searchCount << " | " << endl;
     }
     cout << "------------------------------------------------------------------------\n";
+
+
+    // cout << "\nFinal Sizes After Deletion:\n";
+    for (auto& table : tables)
+    {
+        int deleted = 0;
+        for (const auto& s : strings)
+        {
+            deleted++;
+            table.second->remove(s);
+        }
+        // cout << "Deleted " << deleted << " words from table." << endl;
+        // cout << "Final size of " << table.first << ": " << table.second->size() << endl;
+    }
 
     for (auto& table : tables) delete table.second;
     tables.clear();

@@ -56,43 +56,30 @@ private:
         return candidate;
     }
 
-    int hash1(int k) const
-    {
-        return static_cast<int>(k % length[lengthIdx]);
-    }
-
-    int hash2(int k) const
-    {
-        const double A = 0.6180339887; // (sqrt(5) - 1) / 2
-        double f = fmod(k * A, 1.0);
-
-        return static_cast<int>(floor(length[lengthIdx] * f));
-    }
-
-    int auxHash(int k) const
+    int auxHash(uint64_t k) const
     {
         return R - (k % R);
     }
 
-    int hash(int k) const
+    uint64_t hash(const Key& k) const
     {
-        if (hashFunction == 1) return hash1(k);
-        else return hash2(k);
+        if (hashFunction == 1) return this->hash1(k);
+        else return this->hash2(k);
     }
 
     int customHash(const Key& k, int i) const
     {
-        std::hash<Key> hasher;
-        int key = std::abs(static_cast<int>(hasher(k)));
+        uint64_t h1 = hash(k);
+        int h2 = auxHash(h1);
 
-        int h1 = hash(key);
-        int h2 = auxHash(key);
+        h1 = h1 % length[lengthIdx];
         return (h1 + (C1 * i * h2) + (C2 * i * i)) % length[lengthIdx];
     }
 
     void rehash(int oldLength)
     {
         int newLength = length[lengthIdx];
+        R = prevPrime(length[lengthIdx]);
         // std::cout << "Rehashing to new size: " << newLength << std::endl;
 
         auto newList = new std::tuple<Key, Value, State>[newLength];
@@ -108,7 +95,7 @@ private:
 
             int idx = customHash(k, 0);
             int j = 0;
-            while (true)
+            for (j = 1; j < length[lengthIdx]; j++)
             {
                 auto& [key, value, state] = newList[idx];
                 if (state != OCCUPIED)
@@ -121,7 +108,6 @@ private:
                 else
                 {
                     collisionCount++;
-                    j++;
                     idx = customHash(k, j);
                 }
             }
@@ -133,12 +119,12 @@ private:
         insertionsSinceRehash = 0;
         deletionsSinceRehash = 0;
         lastRehashCount = count;
-        R = prevPrime(length[lengthIdx]);
     }
 
 public:
     HashTableCustomHash(int hashFunction = 1, int c1 = 1, int c2 = 3, int initialSize = INITIAL_SIZE)
     {
+        initialSize = nextPrime(initialSize-1);
         length.push_back(initialSize);
         lengthIdx = 0;
         count = 0;
@@ -218,6 +204,11 @@ public:
         return count;
     }
 
+    int getTableSize() const override
+    {
+        return length[lengthIdx];
+    }
+
     int getCollisionCount() const override
     {
         return collisionCount;
@@ -232,8 +223,8 @@ public:
     {
         // std::cout << "Inserting key: " << k << ", value: " << v << std::endl;
         int idx = customHash(k, 0);
-        int i = 0;
-        while (true)
+        int i;
+        for (i = 1; i < length[lengthIdx]; i++)
         {
             auto& [key, value, state] = list[idx];
             if (state != OCCUPIED)
@@ -251,7 +242,6 @@ public:
             else
             {
                 collisionCount++;
-                i++;
                 idx = customHash(k, i);
             }
         }
@@ -273,14 +263,18 @@ public:
     void remove(const Key& k) override
     {
         int idx = customHash(k, 0);
-        int i = 0;
-        while (true)
+        for (int i = 1; i < length[lengthIdx]; i++)
         {
             auto& [key, value, state] = list[idx];
-            if (state == EMPTY) break; // Key not found
+            if (state == EMPTY)
+            {
+                // std::cout << "Key not found for removal: " << k << std::endl;
+                break; // Key not found
+            }
 
             else if (state == OCCUPIED && key == k)
             {
+                // std::cout << "Removing key: " << k << std::endl;
                 state = DELETED;
                 count--;
                 deletionsSinceRehash++;
@@ -288,14 +282,17 @@ public:
             }
             else
             {
-                i++;
                 idx = customHash(k, i);
             }
         }
 
         if ((static_cast<double>(count) / length[lengthIdx]) < LOAD_FACTOR_DELETION_CUTOFF && deletionsSinceRehash > (lastRehashCount / 2))
         {
-            if (lengthIdx > 0) rehash(length[lengthIdx--]);
+            if (lengthIdx > 0)
+            {
+                lengthIdx--;
+                rehash(length[lengthIdx + 1]);
+            }
         }
     }
 
@@ -322,8 +319,8 @@ public:
     const Value* find(const Key& k) override
     {
         int idx = customHash(k, 0);
-        int i = 0;
-        while (true)
+
+        for (int i = 1; i < length[lengthIdx]; i++)
         {
             auto& [key, value, state] = list[idx];
             hitCount++;
@@ -335,7 +332,6 @@ public:
             }
             else
             {
-                i++;
                 idx = customHash(k, i);
             }
         }
