@@ -21,7 +21,8 @@ private:
     Node* root;
 
 
-    Node* rightRotate(Node* node) {
+    Node* rightRotate(Node* node)
+    {
         Node* newRoot = node->left;
         node->left = newRoot->right;
         newRoot->right = node;
@@ -77,27 +78,19 @@ private:
 
         if (balanceFactor > 1) // Left heavy
         {
-            if (getBalanceFactor(node->left) >= 0) // Left Left heavy
-            {
-                node = rightRotate(node);
-            }
-            else // Left Right heavy
+            if (getBalanceFactor(node->left) < 0) // Left Right heavy
             {
                 node->left = leftRotate(node->left);
-                node = rightRotate(node);
             }
+            node = rightRotate(node);
         }
         else if (balanceFactor < -1) // Right heavy
         {
-            if (getBalanceFactor(node->right) <= 0) // Right Right heavy
-            {
-                node = leftRotate(node);
-            }
-            else // Right Left heavy
+            if (getBalanceFactor(node->right) > 0) // Right Left heavy
             {
                 node->right = rightRotate(node->right);
-                node = leftRotate(node);
             }
+            node = leftRotate(node);
         }
         return node;
     }
@@ -129,7 +122,7 @@ private:
 
         else if (key > node->key) node->right = remove(node->right, key);
 
-        else
+        else // key == node->key
         {
             if (!node->left || !node->right)
             {

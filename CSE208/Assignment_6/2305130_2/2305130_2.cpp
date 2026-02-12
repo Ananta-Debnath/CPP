@@ -31,10 +31,15 @@ void traverse(AVLTree<int, int>& avl, int order)
 
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    cout << "\n";
+    string INPUT_FILE = "input.txt";
+    string OUTPUT_FILE = "output.txt";
+    if (!INPUT_FILE.empty()) freopen(INPUT_FILE.c_str(), "r", stdin);
+    if (!OUTPUT_FILE.empty()) freopen(OUTPUT_FILE.c_str(), "w", stdout);
+
+    // ios_base::sync_with_stdio(false);
+    // cin.tie(NULL);
+    // cout.tie(NULL);
+    // cout << "\n";
 
     AVLTree<int, int> avl;
 
